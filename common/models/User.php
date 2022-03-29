@@ -77,9 +77,9 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Finds user by username
+     * Finds user by nickname
      *
-     * @param string $username
+     * @param string $nickname
      * @return static|null
      */
     public static function findByNickname($nickname)
