@@ -9,5 +9,8 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'formValidator' => [
+            'class' => 'common\components\FormValidator',
+        ]
     ],
 ];

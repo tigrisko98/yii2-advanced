@@ -41,9 +41,10 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '/user/edit-settings' => '/user/edit-settings'
             ],
         ],
-        
+
     ],
     'params' => $params,
 ];
