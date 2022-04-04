@@ -2,15 +2,12 @@
 
 namespace frontend\models;
 
-use phpDocumentor\Reflection\Element;
-use Yii;
 use yii\base\Model;
-use common\models\User;
 
 /**
  * Update form
  */
-class UpdateForm extends Model
+class UserUpdateForm extends Model
 {
     public $nickname;
     public $username;
@@ -22,13 +19,11 @@ class UpdateForm extends Model
     {
         return [
             ['nickname', 'trim'],
-            ['nickname', 'required'],
             ['nickname', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This nickname has already been taken.'],
-            ['nickname', 'string', 'min' => 2, 'max' => 255],
+            ['nickname', 'string', 'min' => 2, 'max' => 255, 'skipOnEmpty' => false],
 
             ['username', 'trim'],
-            ['username', 'required'],
-            ['username', 'string', 'min' => 2, 'max' => 255],
+            ['username', 'string', 'min' => 2, 'max' => 255, 'skipOnEmpty' => false],
         ];
     }
 
