@@ -6,16 +6,30 @@ use Yii;
 use yii\base\Controller;
 use common\components\FormValidator;
 use frontend\models\UserUpdateForm;
+use yii\filters\AccessControl;
 
 class UserController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['edit-settings'],
+                'rules' => [
+                    // allow authenticated users
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function actionEditSettings()
     {
         $user = Yii::$app->user;
-
-        if (!$user->id) {
-            return $this->goHome();
-        }
 
         $model = new UserUpdateForm();
         $model->nickname = $user->identity->nickname;
