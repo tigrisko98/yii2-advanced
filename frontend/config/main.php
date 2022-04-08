@@ -42,6 +42,7 @@ return [
             'showScriptName' => false,
             'rules' =>
                 [
+                    '/user/edit-settings' => '/user/edit-settings',
                     '/user/follow' => '/user/follow',
                     '/user/<nickname>' => '/user/view',
                 ],

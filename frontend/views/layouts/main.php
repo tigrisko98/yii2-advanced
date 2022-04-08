@@ -44,6 +44,7 @@ AppAsset::register($this);
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
         $menuItems[] = ['label' => 'Settings', 'url' => ['user/edit-settings']];
+        $menuItems[] = ['label' => 'Profile', 'url' => ['user/' . Yii::$app->user->identity->nickname]];
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post', ['class' => 'form-inline'])
             . Html::submitButton(

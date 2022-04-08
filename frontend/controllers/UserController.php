@@ -17,7 +17,7 @@ class UserController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['edit-settings', 'follow', 'get-followers-list'],
+                'only' => ['edit-settings', 'follow'],
                 'rules' => [
                     // allow authenticated users
                     [
@@ -61,11 +61,15 @@ class UserController extends Controller
 
         if (Yii::$app->request->isPost && isset($formData['follow-button'])) {
             $model->followingNickname = $formData['User']['nickname'];
+            $model->userId = $user->id;
             if ($model->follow($user->identity, $this->actionGetFollowersList())) {
                 Yii::$app->session->setFlash('success', 'You have been successfully followed this user');
             }
         }
 
+        if (!$formData) {
+            return $this->goHome();
+        }
         return $this->redirect("/user/{$formData['User']['nickname']}");
     }
 
@@ -78,13 +82,26 @@ class UserController extends Controller
     public function actionView($nickname)
     {
         $user = User::findByNickname($nickname);
+        $authUser = Yii::$app->user->identity;
 
         if (!$user) {
             return $this->goHome();
         }
 
         return $this->render('view', [
-            'user' => $user
+            'user' => $user,
+            'isFollowing' => $this->isFollowing($authUser, $user),
+            'isMyProfile' => $this->isMyProfile($nickname),
         ]);
+    }
+
+    private function isFollowing($authUser, $following)
+    {
+        return in_array($following->nickname, unserialize($authUser->following));
+    }
+
+    private function isMyProfile($nickname)
+    {
+        return Yii::$app->user->identity->nickname == $nickname;
     }
 }

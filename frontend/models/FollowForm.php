@@ -11,12 +11,23 @@ use common\models\User;
 class FollowForm extends Model
 {
     public $followingNickname;
+    public $userId;
 
     public function rules()
     {
         return [
             ['followingNickname', 'in', 'range' => User::find()->select('nickname')->asArray()->column()],
+            ['followingNickname', 'validateFollowingNickname'],
+            ['userId', 'in', 'range' => User::find()->select('id')->asArray()->column()]
         ];
+    }
+
+    public function validateFollowingNickname()
+    {
+        if (in_array($this->followingNickname,
+            unserialize(User::find()->select('following')->where(['id' => $this->userId])->one()['following']))) {
+            $this->addError($this->followingNickname, 'You have already been followed this user');
+        }
     }
 
     public function follow($user, array $userFollowers)
