@@ -97,7 +97,14 @@ class UserController extends Controller
 
     private function isFollowing($authUser, $following)
     {
-        return in_array($following->nickname, unserialize($authUser->following));
+        $authUserFollowing = $authUser->following;
+        if ($authUserFollowing === null) {
+            $authUserFollowing = [];
+        } else {
+            $authUserFollowing = unserialize($authUserFollowing);
+        }
+
+        return in_array($following->nickname, $authUserFollowing);
     }
 
     private function isMyProfile($nickname)
