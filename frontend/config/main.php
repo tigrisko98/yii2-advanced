@@ -40,11 +40,12 @@ return [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [
-
-            ],
+            'rules' =>
+                [
+                    '/user/follow' => '/user/follow',
+                    '/user/<nickname>' => '/user/view',
+                ],
         ],
-
     ],
     'params' => $params,
 ];

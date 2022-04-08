@@ -2,11 +2,13 @@
 
 namespace frontend\controllers;
 
+use common\models\User;
 use Yii;
-use yii\base\Controller;
+use yii\web\Controller;
 use common\components\FormValidator;
 use frontend\models\UserUpdateForm;
 use yii\filters\AccessControl;
+use frontend\models\FollowForm;
 
 class UserController extends Controller
 {
@@ -15,7 +17,7 @@ class UserController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['edit-settings'],
+                'only' => ['edit-settings', 'follow', 'get-followers-list'],
                 'rules' => [
                     // allow authenticated users
                     [
@@ -48,5 +50,41 @@ class UserController extends Controller
             'model' => $model
         ]);
 
+    }
+
+    public function actionFollow()
+    {
+        $user = Yii::$app->user;
+
+        $model = new FollowForm();
+        $formData = Yii::$app->request->post();
+
+        if (Yii::$app->request->isPost && isset($formData['follow-button'])) {
+            $model->followingNickname = $formData['User']['nickname'];
+            if ($model->follow($user->identity, $this->actionGetFollowersList())) {
+                Yii::$app->session->setFlash('success', 'You have been successfully followed this user');
+            }
+        }
+
+        return $this->redirect("/user/{$formData['User']['nickname']}");
+    }
+
+    public function actionGetFollowersList()
+    {
+        $followersList = unserialize(Yii::$app->user->identity->followers);
+        return $followersList ? $followersList : [];
+    }
+
+    public function actionView($nickname)
+    {
+        $user = User::findByNickname($nickname);
+
+        if (!$user) {
+            return $this->goHome();
+        }
+
+        return $this->render('view', [
+            'user' => $user
+        ]);
     }
 }
