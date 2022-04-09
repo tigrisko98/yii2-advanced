@@ -26,6 +26,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
                     <?= $form->field($user, 'nickname')->textInput()->hiddenInput()->label(false) ?>
 
+                    <?= $form->field($user, 'id')->textInput()->hiddenInput()->label(false) ?>
+
                     <div class="form-group">
                         <?= Html::submitButton('Follow', ['class' => 'btn btn-primary', 'name' => 'follow-button']) ?>
                     </div>

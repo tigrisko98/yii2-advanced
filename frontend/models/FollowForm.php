@@ -11,6 +11,7 @@ use common\models\User;
 class FollowForm extends Model
 {
     public $followingNickname;
+    public $followingId;
     public $userId;
 
     public function rules()
@@ -25,41 +26,41 @@ class FollowForm extends Model
     public function validateFollowingNickname()
     {
         $authUserFollowing = User::find()->select('following')->where(['id' => $this->userId])->one()['following'];
-        if ($authUserFollowing === null) {
+
+        if (is_null($authUserFollowing)) {
             $authUserFollowing = [];
         } else {
             $authUserFollowing = unserialize($authUserFollowing);
         }
 
-        if (in_array($this->followingNickname, $authUserFollowing)) {
+        if (isset($authUserFollowing[$this->followingId])) {
             $this->addError($this->followingNickname, 'You have already been followed this user');
         }
     }
 
-    public function follow($user, array $userFollowers)
+    public function follow($user, array $userFollowers): bool|null
     {
         if (!$this->validate()) {
             return null;
         }
 
-        $userFollowers[] = $this->followingNickname;
-        $user->following = serialize($userFollowers);
-
         $following = User::findByNickname($this->followingNickname);
 
-        if (!$following->followers) {
-            $followingFollowers = $following->followers = [];
+        $userFollowers[$following->id] = $this->followingNickname;
+        $user->following = serialize($userFollowers);
+
+        $followingFollowers = $following->followers;
+
+        if (is_null($followingFollowers)) {
+            $followingFollowers = [];
         } else {
             $followingFollowers = unserialize($following->followers);
         }
 
-        $followingFollowers[] = $user->nickname;
+        $followingFollowers[$user->id] = $user->nickname;
 
         $following->followers = serialize($followingFollowers);
 
-        if ($user->save() && $following->update()) {
-            return true;
-        }
-        return false;
+        return ($user->save() && $following->update());
     }
 }

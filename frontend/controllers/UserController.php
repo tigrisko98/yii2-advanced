@@ -61,7 +61,9 @@ class UserController extends Controller
 
         if (Yii::$app->request->isPost && isset($formData['follow-button'])) {
             $model->followingNickname = $formData['User']['nickname'];
+            $model->followingId = $formData['User']['id'];
             $model->userId = $user->id;
+
             if ($model->follow($user->identity, $this->actionGetFollowersList())) {
                 Yii::$app->session->setFlash('success', 'You have been successfully followed this user');
             }
@@ -98,13 +100,14 @@ class UserController extends Controller
     private function isFollowing($authUser, $following)
     {
         $authUserFollowing = $authUser->following;
-        if ($authUserFollowing === null) {
+
+        if (is_null($authUserFollowing)) {
             $authUserFollowing = [];
         } else {
             $authUserFollowing = unserialize($authUserFollowing);
         }
 
-        return in_array($following->nickname, $authUserFollowing);
+        return isset($authUserFollowing[$following->id]);
     }
 
     private function isMyProfile($nickname)
