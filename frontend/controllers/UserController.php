@@ -9,6 +9,7 @@ use common\components\FormValidator;
 use frontend\models\UserUpdateForm;
 use yii\filters\AccessControl;
 use frontend\models\FollowForm;
+use frontend\models\UnfollowForm;
 
 class UserController extends Controller
 {
@@ -17,7 +18,7 @@ class UserController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['edit-settings', 'follow'],
+                'only' => ['edit-settings', 'follow', 'unfollow'],
                 'rules' => [
                     // allow authenticated users
                     [
@@ -52,6 +53,12 @@ class UserController extends Controller
 
     }
 
+    public function actionGetFollowersList()
+    {
+        $followersList = unserialize(Yii::$app->user->identity->followers);
+        return $followersList ? $followersList : [];
+    }
+
     public function actionFollow()
     {
         $user = Yii::$app->user;
@@ -75,10 +82,27 @@ class UserController extends Controller
         return $this->redirect("/user/{$formData['User']['nickname']}");
     }
 
-    public function actionGetFollowersList()
+    public function actionUnfollow()
     {
-        $followersList = unserialize(Yii::$app->user->identity->followers);
-        return $followersList ? $followersList : [];
+        $user = Yii::$app->user;
+
+        $model = new UnfollowForm();
+        $formData = Yii::$app->request->post();
+
+        if (Yii::$app->request->isPost && isset($formData['unfollow-button'])) {
+            $model->unfollowingNickname = $formData['User']['nickname'];
+            $model->unfollowingId = $formData['User']['id'];
+            $model->userId = $user->id;
+
+            if ($model->unfollow($user->identity, $this->actionGetFollowersList())) {
+                Yii::$app->session->setFlash('success', 'You have been successfully unfollowed this user');
+            }
+        }
+
+        if (!$formData) {
+            return $this->goHome();
+        }
+        return $this->redirect("/user/{$formData['User']['nickname']}");
     }
 
     public function actionView($nickname)

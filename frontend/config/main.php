@@ -44,6 +44,7 @@ return [
                 [
                     '/user/edit-settings' => '/user/edit-settings',
                     '/user/follow' => '/user/follow',
+                    '/user/unfollow' => '/user/unfollow',
                     '/user/<nickname>' => '/user/view',
                 ],
         ],

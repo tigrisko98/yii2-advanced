@@ -17,7 +17,22 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php if (!$isMyProfile) : ?>
         <?php if ($isFollowing) : ?>
-            <?= Html::button('You are following', ['class' => 'btn btn-secondary disabled', 'disabled' => true]) ?>
+            <div class="row">
+                <div class="col-lg-5">
+                    <p>Unfollow:</p>
+                    <?php $form = ActiveForm::begin(['id' => 'Unfollow-form', 'action' => '/user/unfollow']); ?>
+
+                    <?= $form->field($user, 'nickname')->textInput()->hiddenInput()->label(false) ?>
+
+                    <?= $form->field($user, 'id')->textInput()->hiddenInput()->label(false) ?>
+
+                    <div class="form-group">
+                        <?= Html::submitButton('Unfollow', ['class' => 'btn btn-danger', 'name' => 'unfollow-button']) ?>
+                    </div>
+
+                    <?php ActiveForm::end(); ?>
+                </div>
+            </div>
         <?php else: ?>
             <div class="row">
                 <div class="col-lg-5">
