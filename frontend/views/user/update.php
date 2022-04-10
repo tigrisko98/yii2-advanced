@@ -10,7 +10,7 @@ use yii\bootstrap4\ActiveForm;
 $this->title = 'Edit settings';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
+<div class="user-update">
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>Edit your profile data:</p>

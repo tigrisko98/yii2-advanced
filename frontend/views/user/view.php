@@ -12,9 +12,8 @@ use yii\bootstrap4\ActiveForm;
 $this->title = $user->username;
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
+<div class="user-view">
     <h1><?= Html::encode($user->username) ?></h1>
-
     <?php if (!$isMyProfile) : ?>
         <?php if ($isFollowing) : ?>
             <div class="row">
