@@ -53,10 +53,16 @@ class UserController extends Controller
 
     }
 
-    public function actionGetFollowersList()
+    public function actionGetFollowersList($nickname)
     {
-        $followersList = unserialize(Yii::$app->user->identity->followers);
+        $followersList = unserialize(User::find()->select('followers')->where(['nickname' => $nickname])->one()['followers']);
         return $followersList ? $followersList : [];
+    }
+
+    public function actionGetFollowingList($nickname)
+    {
+        $followingList = unserialize(User::find()->select('following')->where(['nickname' => $nickname])->one()['following']);
+        return $followingList ? $followingList : [];
     }
 
     public function actionFollow()
@@ -71,7 +77,7 @@ class UserController extends Controller
             $model->followingId = $formData['User']['id'];
             $model->userId = $user->id;
 
-            if ($model->follow($user->identity, $this->actionGetFollowersList())) {
+            if ($model->follow($user->identity, $this->actionGetFollowersList($user->identity->nickname))) {
                 Yii::$app->session->setFlash('success', 'You have been successfully followed this user');
             }
         }
@@ -94,7 +100,7 @@ class UserController extends Controller
             $model->unfollowingId = $formData['User']['id'];
             $model->userId = $user->id;
 
-            if ($model->unfollow($user->identity, $this->actionGetFollowersList())) {
+            if ($model->unfollow($user->identity, $this->actionGetFollowersList($user->identity->nickname))) {
                 Yii::$app->session->setFlash('success', 'You have been successfully unfollowed this user');
             }
         }
@@ -118,6 +124,10 @@ class UserController extends Controller
             'user' => $user,
             'isFollowing' => $this->isFollowing($authUser, $user),
             'isMyProfile' => $this->isMyProfile($nickname),
+            'followersList' => $this->actionGetFollowersList($nickname),
+            'followersCount' => count($this->actionGetFollowersList($nickname)),
+            'followingList' => $this->actionGetFollowingList($nickname),
+            'followingCount' => count($this->actionGetFollowingList($nickname)),
         ]);
     }
 
