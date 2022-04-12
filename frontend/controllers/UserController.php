@@ -72,9 +72,12 @@ class UserController extends Controller
         $model = new FollowForm();
         $formData = Yii::$app->request->post();
 
-        if (Yii::$app->request->isPost && isset($formData['follow-button'])) {
-            $model->followingNickname = $formData['User']['nickname'];
-            $model->followingId = $formData['User']['id'];
+        if (Yii::$app->request->isPost && (isset($formData['follow-button']) || isset($formData['follow-button-modal']))) {
+            $model->followingDataArray = User::find()->select(['id', 'nickname', 'username'])
+                ->where(['nickname' => $formData['User']['nickname']])->one()->toArray();
+
+            $model->followingNickname = $model->followingDataArray['nickname'];
+            $model->followingId = $model->followingDataArray['id'];
             $model->userId = $user->id;
 
             if ($model->follow($user->identity, $this->actionGetFollowersList($user->identity->nickname))) {
@@ -85,6 +88,7 @@ class UserController extends Controller
         if (!$formData) {
             return $this->goHome();
         }
+
         return $this->redirect("/user/{$formData['User']['nickname']}");
     }
 
@@ -95,9 +99,11 @@ class UserController extends Controller
         $model = new UnfollowForm();
         $formData = Yii::$app->request->post();
 
-        if (Yii::$app->request->isPost && isset($formData['unfollow-button'])) {
-            $model->unfollowingNickname = $formData['User']['nickname'];
-            $model->unfollowingId = $formData['User']['id'];
+        if (Yii::$app->request->isPost && (isset($formData['unfollow-button']) || isset($formData['unfollow-button-modal']))) {
+            $model->unfollowingDataArray = User::find()->select(['id', 'nickname', 'username'])
+                ->where(['nickname' => $formData['User']['nickname']])->one()->toArray();
+            $model->unfollowingNickname = $model->unfollowingDataArray['nickname'];
+            $model->unfollowingId = $model->unfollowingDataArray['id'];
             $model->userId = $user->id;
 
             if ($model->unfollow($user->identity, $this->actionGetFollowersList($user->identity->nickname))) {
@@ -128,6 +134,7 @@ class UserController extends Controller
             'followersCount' => count($this->actionGetFollowersList($nickname)),
             'followingList' => $this->actionGetFollowingList($nickname),
             'followingCount' => count($this->actionGetFollowingList($nickname)),
+            'authUserFollowingList' => $this->actionGetFollowingList($authUser->nickname)
         ]);
     }
 

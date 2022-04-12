@@ -7,6 +7,7 @@
 /** @var array $followersList */
 /** @var integer $followingCount */
 /** @var array $followingList */
+/** @var array $authUserFollowingList */
 
 /** @var boolean $isMyProfile */
 
@@ -65,47 +66,42 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <p class="modal-header modal-title h3">Followers</p>
-                <table class="table">
-                    <tbody>
-                    <?php foreach ($followersList as $follower) : ?>
-                        <tr>
-                            <th scope="row"><?= $follower ?></th>
-                            <?php if (in_array($follower, $followingList)) : ?>
-                                <div>
-                                    <?php $form = ActiveForm::begin(['id' => 'Follow-form', 'action' => '/user/follow']); ?>
 
-                                    <?= $form->field($user, 'nickname')->textInput()->hiddenInput()->label(false) ?>
+                <?php foreach ($followersList as $follower) : ?>
 
-                                    <?= $form->field($user, 'id')->textInput()->hiddenInput()->label(false) ?>
-                                    <td>
-                                        <div class="form-group">
-                                            <?= Html::submitButton('Follow', ['class' => 'btn btn-primary', 'name' => 'follow-button']) ?>
-                                        </div>
-                                        <?php ActiveForm::end() ?>
-                                    </td>
+                    <?= $follower['nickname'] ?>
+                    <?php if ($follower['nickname'] == Yii::$app->user->identity->nickname) : ?>
+
+                    <?php elseif (!isset($authUserFollowingList[$follower['id']])) : ?>
+                        <div>
+                            <form id="Follow-form" action="/user/follow" method="post">
+                                <input type="hidden" name="_csrf-frontend" value="<?= Yii::$app->request->csrfParam ?>">
+                                <input type="hidden" class="form-group" name="User[nickname]"
+                                       value="<?= $follower['nickname'] ?>">
+                                <input type="hidden" class="form-group" name="User[id]" value="<?= $follower['id'] ?>">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary" name="follow-button-modal">
+                                        Follow
+                                    </button>
                                 </div>
-                            <?php elseif ($follower == Yii::$app->user->identity->nickname) : ?>
-                                <td></td>
-
-                            <?php else: ?>
-                                <div>
-                                    <?php $form = ActiveForm::begin(['id' => 'Unfollow-form', 'action' => '/user/unfollow']); ?>
-
-                                    <?= $form->field($user, 'nickname')->textInput()->hiddenInput()->label(false) ?>
-
-                                    <?= $form->field($user, 'id')->textInput()->hiddenInput()->label(false) ?>
-                                    <td>
-                                        <div class="form-group">
-                                            <?= Html::submitButton('Unfollow', ['class' => 'btn btn-danger', 'name' => 'unfollow-button']) ?>
-                                        </div>
-                                        <?php ActiveForm::end() ?>
-                                    </td>
+                            </form>
+                        </div>
+                    <?php else: ?>
+                        <div>
+                            <form id="Follow-form" action="/user/unfollow" method="post">
+                                <input type="hidden" name="_csrf-frontend" value="<?= Yii::$app->request->csrfParam ?>">
+                                <input type="hidden" class="form-group" name="User[nickname]"
+                                       value="<?= $follower['nickname'] ?>">
+                                <input type="hidden" class="form-group" name="User[id]" value="<?= $follower['id'] ?>">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-danger" name="unfollow-button-modal">
+                                        Unfollow
+                                    </button>
                                 </div>
-                            <?php endif; ?>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
+                            </form>
+                        </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
             </div>
         </div>
     </div>

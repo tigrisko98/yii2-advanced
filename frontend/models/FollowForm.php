@@ -10,6 +10,7 @@ use common\models\User;
  */
 class FollowForm extends Model
 {
+    public $followingDataArray;
     public $followingNickname;
     public $followingId;
     public $userId;
@@ -46,7 +47,7 @@ class FollowForm extends Model
 
         $following = User::findByNickname($this->followingNickname);
 
-        $userFollowers[$following->id] = $this->followingNickname;
+        $userFollowers[$following->id] = $this->followingDataArray;
         $user->following = serialize($userFollowers);
 
         $followingFollowers = $following->followers;
@@ -57,7 +58,9 @@ class FollowForm extends Model
             $followingFollowers = unserialize($following->followers);
         }
 
-        $followingFollowers[$user->id] = $user->nickname;
+        $followingFollowers[$user->id]['id'] = $user->id;
+        $followingFollowers[$user->id]['nickname'] = $user->nickname;
+        $followingFollowers[$user->id]['username'] = $user->username;
 
         $following->followers = serialize($followingFollowers);
 
