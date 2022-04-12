@@ -17,12 +17,15 @@ use yii\bootstrap4\ActiveForm;
 $this->title = $user->username;
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
 <div class="user-view">
     <h1><?= Html::encode($user->username) ?></h1>
     <button type="button" class="btn btn-primary" data-toggle="modal"
-            data-target=".bd-example-modal-lg"><?= $followersCount ?> followers
+            data-target=".followers-list-modal"><?= $followersCount ?> followers
     </button>
-
+    <button type="button" class="btn btn-primary" data-toggle="modal"
+            data-target=".following-list-modal"><?= $followingCount ?> following
+    </button>
     <?php if (!$isMyProfile) : ?>
         <?php if ($isFollowing) : ?>
             <div class="row">
@@ -61,7 +64,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php endif; ?>
     <?php endif; ?>
 
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+    <div class="modal fade followers-list-modal" tabindex="-1" role="dialog" aria-labelledby="followers-list-modal"
          aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -106,4 +109,53 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 
+    <div class="modal fade following-list-modal" tabindex="-1" role="dialog"
+         aria-labelledby="following-list-modal"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <p class="modal-header modal-title h3">Following</p>
+                <?php foreach ($followingList as $follower) : ?>
+
+                    <?= $follower['nickname'] ?>
+                    <?php if ($follower['nickname'] == Yii::$app->user->identity->nickname) : ?>
+
+                    <?php elseif (!isset($authUserFollowingList[$follower['id']])) : ?>
+                        <div>
+                            <form id="Follow-form" action="/user/follow" method="post">
+                                <input type="hidden" name="_csrf-frontend"
+                                       value="<?= Yii::$app->request->csrfParam ?>">
+                                <input type="hidden" class="form-group" name="User[nickname]"
+                                       value="<?= $follower['nickname'] ?>">
+                                <input type="hidden" class="form-group" name="User[id]"
+                                       value="<?= $follower['id'] ?>">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary" name="follow-button-modal">
+                                        Follow
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    <?php else: ?>
+                        <div>
+                            <form id="Follow-form" action="/user/unfollow" method="post">
+                                <input type="hidden" name="_csrf-frontend"
+                                       value="<?= Yii::$app->request->csrfParam ?>">
+                                <input type="hidden" class="form-group" name="User[nickname]"
+                                       value="<?= $follower['nickname'] ?>">
+                                <input type="hidden" class="form-group" name="User[id]"
+                                       value="<?= $follower['id'] ?>">
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-danger" name="unfollow-button-modal">
+                                        Unfollow
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
 </div>
+
