@@ -8,6 +8,7 @@ $params = array_merge(
 
 return [
     'id' => 'app-frontend',
+    'name' => 'STOgram',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
@@ -43,6 +44,8 @@ return [
             'rules' =>
                 [
                     '/user/edit-settings' => '/user/edit-settings',
+                    '/user/<nickname>/followers' => '/user/followers',
+                    '/user/<nickname>/following' => '/user/following',
                     '/user/follow' => '/user/follow',
                     '/user/unfollow' => '/user/unfollow',
                     '/user/<nickname>' => '/user/view',

@@ -53,16 +53,48 @@ class UserController extends Controller
 
     }
 
-    public function actionGetFollowersList(string $nickname): array
+    public function actionFollowers(string $nickname)
     {
-        $followersList = unserialize(User::find()->select('followers')->where(['nickname' => $nickname])->one()['followers']);
-        return $followersList ? $followersList : [];
+        $user = User::findByNickname($nickname);
+
+        $userFollowersList = unserialize($user->followers);
+        $authUserFollowingList = $this->getFollowingList(Yii::$app->user->identity->nickname);
+
+        $formData = Yii::$app->request->post();
+
+        if (Yii::$app->request->isPost && isset($formData['follow-button-modal'])) {
+            $this->actionFollow();
+        } elseif (Yii::$app->request->isPost && isset($formData['unfollow-button-modal'])) {
+            $this->actionUnfollow();
+        }
+
+        return $this->render('followers', [
+            'user' => $user,
+            'userFollowersList' => $userFollowersList,
+            'authUserFollowingList' => $authUserFollowingList,
+        ]);
     }
 
-    public function actionGetFollowingList(string $nickname): array
+    public function actionFollowing(string $nickname)
     {
-        $followingList = unserialize(User::find()->select('following')->where(['nickname' => $nickname])->one()['following']);
-        return $followingList ? $followingList : [];
+        $user = User::findByNickname($nickname);
+
+        $userFollowingList = unserialize($user->following);
+        $authUserFollowingList = $this->getFollowingList(Yii::$app->user->identity->nickname);
+
+        $formData = Yii::$app->request->post();
+
+        if (Yii::$app->request->isPost && isset($formData['follow-button-modal'])) {
+            $this->actionFollow();
+        } elseif (Yii::$app->request->isPost && isset($formData['unfollow-button-modal'])) {
+            $this->actionUnfollow();
+        }
+
+        return $this->render('following', [
+            'user' => $user,
+            'userFollowingList' => $userFollowingList,
+            'authUserFollowingList' => $authUserFollowingList,
+        ]);
     }
 
     public function actionFollow()
@@ -85,7 +117,7 @@ class UserController extends Controller
                 $model->authUserFollowing = unserialize($user->identity->following);
             }
 
-            if ($model->follow($user->identity, $this->actionGetFollowersList($user->identity->nickname))) {
+            if ($model->follow($user->identity, $this->getFollowersList($user->identity->nickname))) {
                 Yii::$app->session->setFlash('success', 'You have been successfully followed this user');
             }
         }
@@ -94,6 +126,9 @@ class UserController extends Controller
             return $this->goHome();
         }
 
+        if (isset($formData['follow-button-modal'])) {
+            return $this->refresh();
+        }
         return $this->redirect("/user/{$formData['User']['nickname']}");
     }
 
@@ -118,7 +153,7 @@ class UserController extends Controller
                 $model->authUserFollowing = unserialize($user->identity->following);
             }
 
-            if ($model->unfollow($user->identity, $this->actionGetFollowersList($user->identity->nickname))) {
+            if ($model->unfollow($user->identity, $this->getFollowersList($user->identity->nickname))) {
                 Yii::$app->session->setFlash('success', 'You have been successfully unfollowed this user');
             }
         }
@@ -126,6 +161,11 @@ class UserController extends Controller
         if (!$formData) {
             return $this->goHome();
         }
+
+        if (isset($formData['unfollow-button-modal'])) {
+            return $this->refresh();
+        }
+
         return $this->redirect("/user/{$formData['User']['nickname']}");
     }
 
@@ -142,11 +182,8 @@ class UserController extends Controller
             'user' => $user,
             'isFollowing' => $this->isFollowing($authUser, $user),
             'isMyProfile' => $this->isMyProfile($nickname),
-            'followersList' => $this->actionGetFollowersList($nickname),
-            'followersCount' => count($this->actionGetFollowersList($nickname)),
-            'followingList' => $this->actionGetFollowingList($nickname),
-            'followingCount' => count($this->actionGetFollowingList($nickname)),
-            'authUserFollowingList' => $this->actionGetFollowingList($authUser->nickname)
+            'followersCount' => count($this->getFollowersList($nickname)),
+            'followingCount' => count($this->getFollowingList($nickname)),
         ]);
     }
 
@@ -166,5 +203,17 @@ class UserController extends Controller
     private function isMyProfile(string $nickname): bool
     {
         return Yii::$app->user->identity->nickname == $nickname;
+    }
+
+    private function getFollowersList($nickname)
+    {
+        $followingList = unserialize(User::find()->select('followers')->where(['nickname' => $nickname])->one()['followers']);
+        return $followingList ? $followingList : [];
+    }
+
+    private function getFollowingList($nickname)
+    {
+        $followingList = unserialize(User::find()->select('following')->where(['nickname' => $nickname])->one()['following']);
+        return $followingList ? $followingList : [];
     }
 }
