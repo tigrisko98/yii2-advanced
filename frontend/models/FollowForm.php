@@ -14,6 +14,7 @@ class FollowForm extends Model
     public $followingNickname;
     public $followingId;
     public $userId;
+    public $authUserFollowing;
 
     public function rules()
     {
@@ -26,20 +27,12 @@ class FollowForm extends Model
 
     public function validateFollowingNickname()
     {
-        $authUserFollowing = User::find()->select('following')->where(['id' => $this->userId])->one()['following'];
-
-        if (is_null($authUserFollowing)) {
-            $authUserFollowing = [];
-        } else {
-            $authUserFollowing = unserialize($authUserFollowing);
-        }
-
-        if (isset($authUserFollowing[$this->followingId])) {
+        if (isset($this->authUserFollowing[$this->followingId])) {
             $this->addError($this->followingNickname, 'You have already been followed this user');
         }
     }
 
-    public function follow($user, array $userFollowers): bool|null
+    public function follow(User $user, array $userFollowers): bool|null
     {
         if (!$this->validate()) {
             return null;

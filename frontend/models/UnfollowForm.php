@@ -14,6 +14,7 @@ class UnfollowForm extends Model
     public $unfollowingNickname;
     public $unfollowingId;
     public $userId;
+    public $authUserFollowing;
 
     public function rules()
     {
@@ -26,16 +27,12 @@ class UnfollowForm extends Model
 
     public function validateUnfollowingNickname()
     {
-        $authUserFollowing = User::find()->select('following')->where(['id' => $this->userId])->one()['following'];
-
-        $authUserFollowing = unserialize($authUserFollowing);
-
-        if (!isset($authUserFollowing[$this->unfollowingId])) {
+        if (!isset($this->authUserFollowing[$this->unfollowingId])) {
             $this->addError($this->unfollowingNickname, 'You have not yet been followed this user');
         }
     }
 
-    public function unfollow($user, array $userFollowers): bool|null
+    public function unfollow(User $user, array $userFollowers): bool|null
     {
         if (!$this->validate()) {
             return null;

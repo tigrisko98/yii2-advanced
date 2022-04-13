@@ -33,9 +33,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     <p>Unfollow:</p>
                     <?php $form = ActiveForm::begin(['id' => 'Unfollow-form', 'action' => '/user/unfollow']); ?>
 
+                    <?= $form->field($user, 'id')->textInput()->hiddenInput()->label(false) ?>
+
                     <?= $form->field($user, 'nickname')->textInput()->hiddenInput()->label(false) ?>
 
-                    <?= $form->field($user, 'id')->textInput()->hiddenInput()->label(false) ?>
+                    <?= $form->field($user, 'username')->textInput()->hiddenInput()->label(false) ?>
 
                     <div class="form-group">
                         <?= Html::submitButton('Unfollow', ['class' => 'btn btn-danger', 'name' => 'unfollow-button']) ?>
