@@ -22,9 +22,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-lg-5">
             <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data', 'id' => 'Edit-form']]); ?>
 
-            <img src="<?= $avatarUrl; ?>" alt="user_avatar">
+            <img class="img-thumbnail" src="<?= $avatarUrl; ?>" alt="user_avatar">
 
-            <?= $form->field($modelUpload, 'avatar')->fileInput(); ?>
+            <?= $form->field($modelUpload, 'avatar')->fileInput()->label('Update your profile photo:') ?>
 
             <?= $form->field($model, 'nickname')->textInput(['autofocus' => true]) ?>
 

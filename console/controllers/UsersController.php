@@ -9,7 +9,7 @@ class UsersController extends Controller
 {
     public function actionGenerate($quantity = 10)
     {
-        for ($i = 11; $i <= $quantity; $i++) {
+        for ($i = 1; $i <= $quantity; $i++) {
             $user = new User();
             $user->nickname = 'asd' . $i;
             $user->username = 'Kostiantyn' . $i;
