@@ -10,9 +10,12 @@ use frontend\models\UserUpdateForm;
 use yii\filters\AccessControl;
 use frontend\models\FollowForm;
 use frontend\models\UnfollowForm;
+use frontend\models\UploadAvatarForm;
+use yii\web\UploadedFile;
 
 class UserController extends Controller
 {
+
     public function behaviors()
     {
         return [
@@ -32,23 +35,36 @@ class UserController extends Controller
 
     public function actionEditSettings()
     {
-        $user = Yii::$app->user;
+        $user = Yii::$app->user->identity;
 
         $model = new UserUpdateForm();
-        $model->nickname = $user->identity->nickname;
-        $model->username = $user->identity->username;
+        $modelUpload = new UploadAvatarForm();
+        $model->nickname = $user->nickname;
+        $model->username = $user->username;
+
+        $avatarUrl = $modelUpload->getFileUrl($user->avatar, 'images/users-avatars/');
+
         $formData = Yii::$app->request->post();
 
         if (Yii::$app->request->isPost && isset($formData['edit-button'])) {
             FormValidator::validateFormData($formData['UserUpdateForm'], $model->attributes);
 
-            if ($model->load($formData) && $model->update($user->identity, $formData['UserUpdateForm'])) {
+            $modelUpload->avatar = UploadedFile::getInstance($modelUpload, 'avatar');
+
+            if ($model->load($formData) && $model->update($user, $formData['UserUpdateForm'])) {
+                if (isset($modelUpload->avatar)) {
+                    $modelUpload->upload($user);
+                }
+
                 Yii::$app->session->setFlash('success', 'Data has been updated successfully');
+                $this->refresh();
             }
         }
 
         return $this->render('update', [
-            'model' => $model
+            'model' => $model,
+            'modelUpload' => $modelUpload,
+            'avatarUrl' => $avatarUrl
         ]);
 
     }

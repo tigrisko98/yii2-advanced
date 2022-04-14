@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use common\models\User;
 use yii\base\Model;
 
 /**
@@ -24,6 +25,7 @@ class UserUpdateForm extends Model
 
             ['username', 'trim'],
             ['username', 'string', 'min' => 2, 'max' => 255, 'skipOnEmpty' => false],
+
         ];
     }
 
@@ -32,10 +34,14 @@ class UserUpdateForm extends Model
      *1
      * @return bool whether the updating data was successful
      */
-    public function update($user, $formData)
+    public function update(User $user, $formData)
     {
         if (!$this->validate(array_keys($formData))) {
             return null;
+        }
+
+        if (empty($formData)) {
+            return true;
         }
 
         foreach ($formData as $key => $value) {

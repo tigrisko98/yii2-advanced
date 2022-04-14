@@ -2,7 +2,10 @@
 
 /** @var yii\web\View $this */
 /** @var yii\bootstrap4\ActiveForm $form */
+/** @var string $avatarUrl */
+
 /** @var \frontend\models\UserUpdateForm $model */
+/** @var \frontend\models\UploadAvatarForm $modelUpload */
 
 use yii\bootstrap4\Html;
 use yii\bootstrap4\ActiveForm;
@@ -17,7 +20,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="row">
         <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'Edit-form']); ?>
+            <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data', 'id' => 'Edit-form']]); ?>
+
+            <img src="<?= $avatarUrl; ?>" alt="user_avatar">
+
+            <?= $form->field($modelUpload, 'avatar')->fileInput(); ?>
 
             <?= $form->field($model, 'nickname')->textInput(['autofocus' => true]) ?>
 
