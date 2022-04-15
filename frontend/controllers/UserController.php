@@ -77,7 +77,14 @@ class UserController extends Controller
     {
         $user = User::findByNickname($nickname);
 
-        $userFollowersList = unserialize($user->followers);
+        $userFollowersList = $user->followers;
+
+        if (is_null($userFollowersList)) {
+            $userFollowersList = [];
+        } else {
+            $userFollowersList = unserialize($user->following);
+        }
+
         $authUserFollowingList = $this->getFollowingList(Yii::$app->user->identity->nickname);
 
         $formData = Yii::$app->request->post();
@@ -100,7 +107,14 @@ class UserController extends Controller
     {
         $user = User::findByNickname($nickname);
 
-        $userFollowingList = unserialize($user->following);
+        $userFollowingList = $user->following;
+
+        if (is_null($userFollowingList)) {
+            $userFollowingList = [];
+        } else {
+            $userFollowingList = unserialize($user->following);
+        }
+
         $authUserFollowingList = $this->getFollowingList(Yii::$app->user->identity->nickname);
 
         $formData = Yii::$app->request->post();
