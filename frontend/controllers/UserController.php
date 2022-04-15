@@ -45,7 +45,7 @@ class UserController extends Controller
         $avatarUrl = $user->avatar_url;
 
         if (is_null($avatarUrl)) {
-            $avatarUrl = $modelUpload->getFileUrl($user->avatar, 'images/users-avatars/');
+            $avatarUrl = $modelUpload->getFileUrl($user->avatar, $modelUpload->usersAvatarsFolder);
         }
 
         $formData = Yii::$app->request->post();
@@ -196,7 +196,7 @@ class UserController extends Controller
         $userAvatarUrl = $user->avatar_url;
 
         if (is_null($userAvatarUrl)) {
-            $userAvatarUrl = $modelUpload->getFileUrl($user->avatar, 'images/users-avatars/');
+            $userAvatarUrl = $modelUpload->getFileUrl($user->avatar, $modelUpload->usersAvatarsFolder);
         }
 
         $authUser = Yii::$app->user->identity;

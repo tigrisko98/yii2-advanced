@@ -18,11 +18,13 @@ class UploadAvatarForm extends Model
 
     public $avatar;
     public $s3;
+    public $usersAvatarsFolder;
 
     public function __construct($config = [])
     {
         parent::__construct($config);
         $this->s3 = Yii::$app->get('s3');
+        $this->usersAvatarsFolder = Yii::getAlias('@usersAvatarsFolder');
     }
 
     public function rules()
@@ -35,10 +37,10 @@ class UploadAvatarForm extends Model
     public function upload(User $user)
     {
         if ($this->validate()) {
-            $this->saveUploadedFile($this->avatar, '', 'images/users-avatars/' . $this->avatar->baseName);
+            $this->saveUploadedFile($this->avatar, '', $this->usersAvatarsFolder . $this->avatar->baseName);
 
             $user->avatar = $this->avatar->baseName . '.' . $this->avatar->extension;
-            $user->avatar_url = $this->getFileUrl($this->avatar->name, 'images/users-avatars/');
+            $user->avatar_url = $this->getFileUrl($this->avatar->name, $this->usersAvatarsFolder);
             $user->update();
 
             return true;
