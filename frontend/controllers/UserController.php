@@ -61,7 +61,7 @@ class UserController extends Controller
                 }
 
                 Yii::$app->session->setFlash('success', 'Data has been updated successfully');
-                $this->refresh();
+                return $this->refresh();
             }
         }
 
@@ -92,6 +92,7 @@ class UserController extends Controller
             'user' => $user,
             'userFollowersList' => $userFollowersList,
             'authUserFollowingList' => $authUserFollowingList,
+            'modelUpload' => new UploadAvatarForm()
         ]);
     }
 
@@ -114,6 +115,7 @@ class UserController extends Controller
             'user' => $user,
             'userFollowingList' => $userFollowingList,
             'authUserFollowingList' => $authUserFollowingList,
+            'modelUpload' => new UploadAvatarForm()
         ]);
     }
 
@@ -160,10 +162,8 @@ class UserController extends Controller
         $formData = Yii::$app->request->post();
 
         if (Yii::$app->request->isPost && (isset($formData['unfollow-button']) || isset($formData['unfollow-button-modal']))) {
-            $model->unfollowingDataArray = User::find()->select(['id', 'nickname', 'username'])
-                ->where(['nickname' => $formData['User']['nickname']])->one()->toArray();
-            $model->unfollowingNickname = $model->unfollowingDataArray['nickname'];
-            $model->unfollowingId = $model->unfollowingDataArray['id'];
+            $model->unfollowingNickname = $formData['User']['nickname'];
+            $model->unfollowingId = $formData['User']['id'];
             $model->userId = $user->id;
             $model->authUserFollowing = $user->identity->following;
 

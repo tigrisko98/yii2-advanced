@@ -54,6 +54,8 @@ class FollowForm extends Model
         $followingFollowers[$user->id]['id'] = $user->id;
         $followingFollowers[$user->id]['nickname'] = $user->nickname;
         $followingFollowers[$user->id]['username'] = $user->username;
+        $followingFollowers[$user->id]['avatar'] = $user->avatar;
+        $followingFollowers[$user->id]['avatar_url'] = $user->avatar_url;
 
         $following->followers = serialize($followingFollowers);
 

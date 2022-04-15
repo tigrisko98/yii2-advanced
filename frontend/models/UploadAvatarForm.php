@@ -24,7 +24,7 @@ class UploadAvatarForm extends Model
     {
         parent::__construct($config);
         $this->s3 = Yii::$app->get('s3');
-        $this->usersAvatarsFolder = Yii::getAlias('@usersAvatarsFolder');
+        $this->usersAvatarsFolder = Yii::getAlias('@usersAvatarsFolder') . '/';
     }
 
     public function rules()

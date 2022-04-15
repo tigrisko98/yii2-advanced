@@ -3,7 +3,7 @@ return [
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
-        '@usersAvatarsFolder' => 'images/users-avatars/'
+        '@usersAvatarsFolder' => "images/users-avatars"
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [

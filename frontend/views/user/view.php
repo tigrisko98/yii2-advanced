@@ -23,9 +23,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 <img src="<?= $userAvatarUrl; ?>" alt="user-avatar" class="img-thumbnail"
                      style="width: 150px; height: 150px; border-radius: 50%">
             </div>
-            <div class="col-md-5">
+            <div class="col-md-6">
                 <div class="row">
-                    <div class="col-md-3" style="padding-top: 15px">
+                    <div class="col-md-6" style="padding-top: 15px">
                         <h2><?= Html::encode($user->nickname) ?></h2>
                     </div>
                     <?php if (!$isMyProfile) : ?>
@@ -37,8 +37,6 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <?= $form->field($user, 'id')->textInput()->hiddenInput()->label(false) ?>
 
                                 <?= $form->field($user, 'nickname')->textInput()->hiddenInput()->label(false) ?>
-
-                                <?= $form->field($user, 'username')->textInput()->hiddenInput()->label(false) ?>
 
                                 <div class="form-group">
                                     <?= Html::submitButton('Unfollow', [
@@ -59,6 +57,12 @@ $this->params['breadcrumbs'][] = $this->title;
                                 <?= $form->field($user, 'nickname')->textInput()->hiddenInput()->label(false) ?>
 
                                 <?= $form->field($user, 'id')->textInput()->hiddenInput()->label(false) ?>
+
+                                <?= $form->field($user, 'username')->textInput()->hiddenInput()->label(false) ?>
+
+                                <?= $form->field($user, 'avatar')->textInput()->hiddenInput()->label(false) ?>
+
+                                <?= $form->field($user, 'avatar_url')->textInput()->hiddenInput()->label(false) ?>
 
                                 <div class="form-group">
                                     <?= Html::submitButton('Follow', [

@@ -10,7 +10,6 @@ use common\models\User;
  */
 class UnfollowForm extends Model
 {
-    public $unfollowingDataArray;
     public $unfollowingNickname;
     public $unfollowingId;
     public $userId;
