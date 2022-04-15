@@ -26,6 +26,7 @@ use yii\web\IdentityInterface;
  * @property string $followers
  * @property string $following
  * @property string $avatar
+ * @property string $avatar_url;
  */
 class User extends ActiveRecord implements IdentityInterface
 {

@@ -42,7 +42,11 @@ class UserController extends Controller
         $model->nickname = $user->nickname;
         $model->username = $user->username;
 
-        $avatarUrl = $modelUpload->getFileUrl($user->avatar, 'images/users-avatars/');
+        $avatarUrl = $user->avatar_url;
+
+        if (is_null($avatarUrl)) {
+            $avatarUrl = $modelUpload->getFileUrl($user->avatar, 'images/users-avatars/');
+        }
 
         $formData = Yii::$app->request->post();
 
@@ -188,6 +192,13 @@ class UserController extends Controller
     public function actionView($nickname)
     {
         $user = User::findByNickname($nickname);
+        $modelUpload = new UploadAvatarForm();
+        $userAvatarUrl = $user->avatar_url;
+
+        if (is_null($userAvatarUrl)) {
+            $userAvatarUrl = $modelUpload->getFileUrl($user->avatar, 'images/users-avatars/');
+        }
+
         $authUser = Yii::$app->user->identity;
 
         if (!$user) {
@@ -200,6 +211,7 @@ class UserController extends Controller
             'isMyProfile' => $this->isMyProfile($nickname),
             'followersCount' => count($this->getFollowersList($nickname)),
             'followingCount' => count($this->getFollowingList($nickname)),
+            'userAvatarUrl' => $userAvatarUrl
         ]);
     }
 

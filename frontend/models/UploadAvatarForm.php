@@ -38,6 +38,7 @@ class UploadAvatarForm extends Model
             $this->saveUploadedFile($this->avatar, '', 'images/users-avatars/' . $this->avatar->baseName);
 
             $user->avatar = $this->avatar->baseName . '.' . $this->avatar->extension;
+            $user->avatar_url = $this->getFileUrl($this->avatar->name, 'images/users-avatars/');
             $user->update();
 
             return true;
