@@ -31,7 +31,7 @@ class UnfollowForm extends Model
         }
     }
 
-    public function unfollow(User $user, array $userFollowers): bool|null
+    public function unfollow(User $authUser): bool|null
     {
         if (!$this->validate()) {
             return null;
@@ -39,13 +39,13 @@ class UnfollowForm extends Model
 
         $unfollowing = User::findByNickname($this->unfollowingNickname);
 
-        unset($userFollowers[$unfollowing->id]);
-        $user->following = serialize($userFollowers);
+        unset($this->authUserFollowing[$unfollowing->id]);
+        $authUser->following = serialize($this->authUserFollowing);
 
         $followingFollowers = unserialize($unfollowing->followers);
-        unset($followingFollowers[$user->id]);
+        unset($followingFollowers[$authUser->id]);
         $unfollowing->followers = serialize($followingFollowers);
 
-        return ($user->save() && $unfollowing->update());
+        return ($authUser->save() && $unfollowing->update());
     }
 }

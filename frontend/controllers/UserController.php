@@ -82,7 +82,7 @@ class UserController extends Controller
         if (is_null($userFollowersList)) {
             $userFollowersList = [];
         } else {
-            $userFollowersList = unserialize($user->following);
+            $userFollowersList = unserialize($user->followers);
         }
 
         $authUserFollowingList = $this->getFollowingList(Yii::$app->user->identity->nickname);
@@ -153,7 +153,7 @@ class UserController extends Controller
                 $model->authUserFollowing = unserialize($user->identity->following);
             }
 
-            if ($model->follow($user->identity, $this->getFollowersList($user->identity->nickname))) {
+            if ($model->follow($user->identity)) {
                 Yii::$app->session->setFlash('success', 'You have been successfully followed this user');
             }
         }
@@ -187,7 +187,7 @@ class UserController extends Controller
                 $model->authUserFollowing = unserialize($user->identity->following);
             }
 
-            if ($model->unfollow($user->identity, $this->getFollowersList($user->identity->nickname))) {
+            if ($model->unfollow($user->identity)) {
                 Yii::$app->session->setFlash('success', 'You have been successfully unfollowed this user');
             }
         }

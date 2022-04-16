@@ -32,7 +32,7 @@ class FollowForm extends Model
         }
     }
 
-    public function follow(User $user, array $userFollowers): bool|null
+    public function follow(User $authUser): bool|null
     {
         if (!$this->validate()) {
             return null;
@@ -40,8 +40,8 @@ class FollowForm extends Model
 
         $following = User::findByNickname($this->followingNickname);
 
-        $userFollowers[$following->id] = $this->followingDataArray;
-        $user->following = serialize($userFollowers);
+        $this->authUserFollowing[$following->id] = $this->followingDataArray;
+        $authUser->following = serialize($this->authUserFollowing);
 
         $followingFollowers = $following->followers;
 
@@ -51,14 +51,14 @@ class FollowForm extends Model
             $followingFollowers = unserialize($following->followers);
         }
 
-        $followingFollowers[$user->id]['id'] = $user->id;
-        $followingFollowers[$user->id]['nickname'] = $user->nickname;
-        $followingFollowers[$user->id]['username'] = $user->username;
-        $followingFollowers[$user->id]['avatar'] = $user->avatar;
-        $followingFollowers[$user->id]['avatar_url'] = $user->avatar_url;
+        $followingFollowers[$authUser->id]['id'] = $authUser->id;
+        $followingFollowers[$authUser->id]['nickname'] = $authUser->nickname;
+        $followingFollowers[$authUser->id]['username'] = $authUser->username;
+        $followingFollowers[$authUser->id]['avatar'] = $authUser->avatar;
+        $followingFollowers[$authUser->id]['avatar_url'] = $authUser->avatar_url;
 
         $following->followers = serialize($followingFollowers);
 
-        return ($user->save() && $following->update());
+        return ($authUser->save() && $following->update());
     }
 }

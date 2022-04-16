@@ -4,7 +4,6 @@
 /** @var array $userFollowingList */
 /** @var \frontend\models\UploadAvatarForm $modelUpload */
 
-
 /** @var array $authUserFollowingList */
 
 use yii\bootstrap4\Html;
@@ -12,7 +11,6 @@ use yii\bootstrap4\Html;
 $this->title = $user->nickname . ' following';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-
 <div class="user-following">
     <h2><?= Html::encode($user->nickname . ' following') ?></h2>
     <div class="container">
