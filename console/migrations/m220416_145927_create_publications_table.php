@@ -20,8 +20,8 @@ class m220416_145927_create_publications_table extends Migration
         $this->createTable('{{%publications}}', [
             'id' => $this->primaryKey(),
             'user_id' => $this->integer()->notNull(),
-            'caption' => $this->string(),
-            'images_urls' => $this->string()->notNull(),
+            'caption' => $this->text(),
+            'images_urls' => $this->text()->notNull(),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
         ], $tableOptions);

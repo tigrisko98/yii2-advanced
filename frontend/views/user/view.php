@@ -6,8 +6,9 @@
 /** @var integer $followersCount */
 /** @var integer $followingCount */
 /** @var boolean $isMyProfile */
-
 /** @var string $userAvatarUrl */
+
+/** @var array $publicationsFirstImageUrls */
 
 use yii\bootstrap4\Html;
 use yii\bootstrap4\ActiveForm;
@@ -99,7 +100,19 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
     </div>
+    <hr>
+    <div class="container" style="padding-top: 20px">
+        <div class="row">
 
+            <?php foreach (array_reverse($publicationsFirstImageUrls) as $imageUrl) : ?>
+
+                <div class="col-md-4" style="margin-bottom: 20px">
+                    <img src="<?= $imageUrl; ?>" alt="loh" style="width: 350px; height: 350px">
+                </div>
+
+            <?php endforeach; ?>
+        </div>
+    </div>
 
 </div>
 

@@ -45,4 +45,21 @@ class Publication extends ActiveRecord
             ['user_id', 'in', 'range' => User::find()->select('id')->asArray()->column()],
         ];
     }
+
+    public static function findPublicationsByUserId($id)
+    {
+        return static::find()->where(['user_id' => $id])->all();
+    }
+
+    public static function findPublicationsFirstImageUrls($userId)
+    {
+        $publications = static::find()->where(['user_id' => $userId])->asArray()->all();
+        $firstImageUrls = [];
+
+        foreach ($publications as $publication) {
+            $firstImageUrls[$publication['id']] = unserialize($publication['images_urls'])[0];
+        }
+
+        return$firstImageUrls;
+    }
 }

@@ -12,6 +12,7 @@ use frontend\models\FollowForm;
 use frontend\models\UnfollowForm;
 use frontend\models\UploadAvatarForm;
 use yii\web\UploadedFile;
+use frontend\models\Publication;
 
 class UserController extends Controller
 {
@@ -208,6 +209,7 @@ class UserController extends Controller
         $user = User::findByNickname($nickname);
         $modelUpload = new UploadAvatarForm();
         $userAvatarUrl = $user->avatar_url;
+        $publicationsFirstImageUrls = Publication::findPublicationsFirstImageUrls($user->id);
 
         if (is_null($userAvatarUrl)) {
             $userAvatarUrl = $modelUpload->getFileUrl($user->avatar, $modelUpload->usersAvatarsFolder);
@@ -225,7 +227,8 @@ class UserController extends Controller
             'isMyProfile' => $this->isMyProfile($nickname),
             'followersCount' => count($this->getFollowersList($nickname)),
             'followingCount' => count($this->getFollowingList($nickname)),
-            'userAvatarUrl' => $userAvatarUrl
+            'userAvatarUrl' => $userAvatarUrl,
+            'publicationsFirstImageUrls' => $publicationsFirstImageUrls,
         ]);
     }
 
