@@ -49,6 +49,8 @@ return [
                     '/user/follow' => '/user/follow',
                     '/user/unfollow' => '/user/unfollow',
                     '/user/<nickname>' => '/user/view',
+
+                    '/publication/create' => '/publication/create'
                 ],
         ],
     ],

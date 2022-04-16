@@ -43,6 +43,7 @@ AppAsset::register($this);
         $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
+        $menuItems[] = ['label' => 'Create publication', 'url' => ['publication/create']];
         $menuItems[] = ['label' => 'Settings', 'url' => ['user/edit-settings']];
         $menuItems[] = ['label' => 'Profile', 'url' => ['user/' . Yii::$app->user->identity->nickname]];
         $menuItems[] = '<li>'
