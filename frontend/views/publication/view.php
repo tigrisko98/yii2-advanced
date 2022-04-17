@@ -3,11 +3,17 @@
 /** @var yii\bootstrap4\ActiveForm $form */
 /** @var \frontend\models\Publication $publication */
 /** @var \common\models\User $publisher */
-
+/** @var \frontend\models\UploadAvatarForm $modelUpload */
 /** @var array $images */
+/** @var boolean $isMyProfile */
+/** @var boolean $isFollowing */
 
 use yii\bootstrap4\Html;
 use yii\bootstrap4\ActiveForm;
+
+if (!$publisher->avatar_url) {
+    $publisher->avatar_url = $modelUpload->getFileUrl($publisher->avatar, $modelUpload->usersAvatarsFolder);
+}
 
 ?>
 
@@ -29,21 +35,19 @@ use yii\bootstrap4\ActiveForm;
                             <?php endforeach; ?>
                         </ol>
 
-                        <?php foreach ($images
+                        <?php foreach ($images as $key => $image): ?>
 
-                        as $key => $image): ?>
-
-                        <?php if ($key == 0): ?>
-                        <div class="carousel-item active">
+                            <?php if ($key == 0): ?>
+                                <div class="carousel-item active">
                             <?php else: ?>
-                            <div class="carousel-item">
-                                <?php endif; ?>
+                                <div class="carousel-item">
+                            <?php endif; ?>
                                 <img class="d-block w-100" src="<?= $image; ?>" alt="Publication image"
                                      style="width: 600px; height: 600px">
-                            </div>
+                                </div>
 
                             <?php endforeach; ?>
-                        </div>
+                    </div>
                         <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
                            data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -63,9 +67,59 @@ use yii\bootstrap4\ActiveForm;
                             <img src="<?= $publisher->avatar_url ?>" alt="user-avatar"
                                  style="width: 50px; height: 50px; border-radius: 50%; margin-top: 10px">
                         </div>
-                        <div class="col-md-2" style="margin-top: 25px; margin-left: -10px">
+                        <div class="col-md-4" style="margin-top: 25px; margin-left: -10px">
                             <strong><?= $publisher->nickname; ?></strong>
                         </div>
+
+                        <?php if (!$isMyProfile) : ?>
+                            <?php if ($isFollowing) : ?>
+                                <div class="col-md-3">
+
+                                    <?php $form = ActiveForm::begin(['id' => 'Unfollow-form', 'action' => '']); ?>
+
+                                    <?= $form->field($publisher, 'id')->textInput()->hiddenInput()->label(false) ?>
+
+                                    <?= $form->field($publisher, 'nickname')->textInput()->hiddenInput()->label(false) ?>
+
+                                    <div class="form-group">
+                                        <?= Html::submitButton('Unfollow', [
+                                            'class' => 'btn btn-danger',
+                                            'name' => 'unfollow-button-modal',
+                                            'style' => 'padding: 6px 30px'
+                                        ]) ?>
+                                    </div>
+
+                                    <?php ActiveForm::end(); ?>
+                                </div>
+
+                            <?php else: ?>
+                                <div class="col-md-2">
+
+                                    <?php $form = ActiveForm::begin(['id' => 'Follow-form', 'action' => '']); ?>
+
+                                    <?= $form->field($publisher, 'nickname')->textInput()->hiddenInput()->label(false) ?>
+
+                                    <?= $form->field($publisher, 'id')->textInput()->hiddenInput()->label(false) ?>
+
+                                    <?= $form->field($publisher, 'username')->textInput()->hiddenInput()->label(false) ?>
+
+                                    <?= $form->field($publisher, 'avatar')->textInput()->hiddenInput()->label(false) ?>
+
+                                    <?= $form->field($publisher, 'avatar_url')->textInput()->hiddenInput()->label(false) ?>
+
+                                    <div class="form-group">
+                                        <?= Html::submitButton('Follow', [
+                                            'class' => 'btn btn-primary',
+                                            'name' => 'follow-button-modal',
+                                            'style' => 'padding: 6px 30px'
+                                        ]) ?>
+                                    </div>
+
+                                    <?php ActiveForm::end(); ?>
+
+                                </div>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </div>
                     <hr>
                     <div class="row">

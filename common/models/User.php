@@ -214,4 +214,23 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+
+    public static function isFollowing(User $authUser, $followingId): bool
+    {
+        $authUserFollowing = $authUser->following;
+
+        if (is_null($authUserFollowing)) {
+            $authUserFollowing = [];
+        } else {
+            $authUserFollowing = unserialize($authUserFollowing);
+        }
+
+        return isset($authUserFollowing[$followingId]);
+    }
+
+    public static function isMyProfile(string $nickname): bool
+    {
+        return Yii::$app->user->identity->nickname == $nickname;
+    }
+
 }

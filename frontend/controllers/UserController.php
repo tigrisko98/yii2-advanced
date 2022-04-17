@@ -223,31 +223,13 @@ class UserController extends Controller
 
         return $this->render('view', [
             'user' => $user,
-            'isFollowing' => $this->isFollowing($authUser, $user),
-            'isMyProfile' => $this->isMyProfile($nickname),
+            'isFollowing' => User::isFollowing($authUser, $user->id),
+            'isMyProfile' => User::isMyProfile($nickname),
             'followersCount' => count($this->getFollowersList($nickname)),
             'followingCount' => count($this->getFollowingList($nickname)),
             'userAvatarUrl' => $userAvatarUrl,
             'publicationsFirstImageUrls' => $publicationsFirstImageUrls,
         ]);
-    }
-
-    private function isFollowing(User $authUser, User $following): bool
-    {
-        $authUserFollowing = $authUser->following;
-
-        if (is_null($authUserFollowing)) {
-            $authUserFollowing = [];
-        } else {
-            $authUserFollowing = unserialize($authUserFollowing);
-        }
-
-        return isset($authUserFollowing[$following->id]);
-    }
-
-    private function isMyProfile(string $nickname): bool
-    {
-        return Yii::$app->user->identity->nickname == $nickname;
     }
 
     private function getFollowersList($nickname)
