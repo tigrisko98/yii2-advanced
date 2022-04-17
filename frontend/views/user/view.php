@@ -104,10 +104,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="container" style="padding-top: 20px">
         <div class="row">
 
-            <?php foreach (array_reverse($publicationsFirstImageUrls) as $imageUrl) : ?>
+            <?php foreach ($publicationsFirstImageUrls as $key => $imageUrl) : ?>
 
                 <div class="col-md-4" style="margin-bottom: 20px">
-                    <img src="<?= $imageUrl; ?>" alt="loh" style="width: 350px; height: 350px">
+                    <a href="/publication/<?= $key; ?>">
+                        <img src="<?= $imageUrl; ?>" alt="loh" style="width: 350px; height: 350px">
+                    </a>
                 </div>
 
             <?php endforeach; ?>

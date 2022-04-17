@@ -2,6 +2,8 @@
 
 namespace frontend\controllers;
 
+use common\models\User;
+use frontend\models\Publication;
 use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
@@ -45,7 +47,18 @@ class PublicationController extends Controller
         }
 
         return $this->render('create', ['model' => $model]);
+    }
 
+    public function actionView($id)
+    {
+        $publication = Publication::findOne($id);
+        $publisher = User::findIdentity($publication->user_id);
+        $images = unserialize($publication->images_urls);
 
+        return $this->render('view', [
+           'publication' => $publication,
+           'publisher' => $publisher,
+           'images' => $images
+        ]);
     }
 }

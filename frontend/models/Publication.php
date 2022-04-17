@@ -53,7 +53,7 @@ class Publication extends ActiveRecord
 
     public static function findPublicationsFirstImageUrls($userId)
     {
-        $publications = static::find()->where(['user_id' => $userId])->asArray()->all();
+        $publications = static::find()->where(['user_id' => $userId])->orderBy(['created_at' => SORT_DESC])->asArray()->all();
         $firstImageUrls = [];
 
         foreach ($publications as $publication) {

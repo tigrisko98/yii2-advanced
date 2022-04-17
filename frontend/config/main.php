@@ -50,7 +50,8 @@ return [
                     '/user/unfollow' => '/user/unfollow',
                     '/user/<nickname>' => '/user/view',
 
-                    '/publication/create' => '/publication/create'
+                    '/publication/create' => '/publication/create',
+                    '/publication/<id>' => '/publication/view'
                 ],
         ],
     ],
