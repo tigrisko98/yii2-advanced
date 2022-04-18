@@ -3,9 +3,8 @@
 namespace frontend\controllers;
 
 use common\models\User;
-use frontend\models\FollowForm;
 use frontend\models\Publication;
-use frontend\models\UnfollowForm;
+use frontend\models\PublicationUpdateForm;
 use frontend\models\UploadAvatarForm;
 use Yii;
 use yii\web\Controller;
@@ -20,7 +19,7 @@ class PublicationController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create'],
+                'only' => ['create', 'delete', 'update'],
                 'rules' => [
                     // allow authenticated users
                     [
@@ -82,5 +81,28 @@ class PublicationController extends Controller
         }
 
         return $this->redirect("/user/$authUserNickname");
+    }
+
+    public function actionEdit($id)
+    {
+        $publication = Publication::findOne($id);
+        $model = new PublicationUpdateForm();
+        $images = unserialize($publication->images_urls);
+
+        $formData = Yii::$app->request->post();
+        $model->caption = $publication->caption;
+
+        if (Yii::$app->request->isPost && isset($formData['update-publication-button'])) {
+            if ($model->load($formData['PublicationUpdateForm'], '') && $model->update($publication)) {
+                Yii::$app->session->setFlash('success', 'Publication has been updated successfully');
+                return $this->redirect("/publication/{$publication->id}");
+            }
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+            'publication' => $publication,
+            'images' => $images
+        ]);
     }
 }

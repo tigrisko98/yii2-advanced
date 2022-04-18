@@ -52,7 +52,8 @@ return [
 
                     '/publication/create' => '/publication/create',
                     '/publication/<id>' => '/publication/view',
-                    '/publication/<id>/delete' => '/publication/delete'
+                    '/publication/<id>/delete' => '/publication/delete',
+                    '/publication/<id>/edit' => '/publication/edit'
                 ],
         ],
     ],

@@ -78,7 +78,5 @@ class FollowAndUnfollowForm
     <?php endforeach; ?>
 
         <?php return ob_get_clean();
-
     }
-
 }
