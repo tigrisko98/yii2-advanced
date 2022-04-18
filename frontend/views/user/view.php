@@ -104,6 +104,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="container" style="padding-top: 20px">
         <div class="row">
 
+            <?php if (empty($publicationsFirstImageUrls)) :?>
+            <div class="col-md-12" style="text-align: center">
+                <p>No publications yet</p>
+            </div>
+            <?php endif; ?>
+
             <?php foreach ($publicationsFirstImageUrls as $key => $imageUrl) : ?>
 
                 <div class="col-md-4" style="margin-bottom: 20px">

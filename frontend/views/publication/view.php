@@ -75,16 +75,18 @@ if (!$publisher->avatar_url) {
                             <?php if ($isFollowing) : ?>
                                 <div class="col-md-3">
 
-                                    <?php $form = ActiveForm::begin(['id' => 'Unfollow-form', 'action' => '']); ?>
+                                    <?php $form = ActiveForm::begin(['id' => 'Unfollow-form', 'action' => '/user/unfollow']); ?>
 
                                     <?= $form->field($publisher, 'id')->textInput()->hiddenInput()->label(false) ?>
 
                                     <?= $form->field($publisher, 'nickname')->textInput()->hiddenInput()->label(false) ?>
 
+                                    <?= $form->field($publication, 'id')->textInput()->hiddenInput()->label(false) ?>
+
                                     <div class="form-group">
                                         <?= Html::submitButton('Unfollow', [
                                             'class' => 'btn btn-danger',
-                                            'name' => 'unfollow-button-modal',
+                                            'name' => 'unfollow-button-publication',
                                             'style' => 'padding: 6px 30px'
                                         ]) ?>
                                     </div>
@@ -95,7 +97,7 @@ if (!$publisher->avatar_url) {
                             <?php else: ?>
                                 <div class="col-md-2">
 
-                                    <?php $form = ActiveForm::begin(['id' => 'Follow-form', 'action' => '']); ?>
+                                    <?php $form = ActiveForm::begin(['id' => 'Follow-form', 'action' => '/user/follow']); ?>
 
                                     <?= $form->field($publisher, 'nickname')->textInput()->hiddenInput()->label(false) ?>
 
@@ -107,10 +109,13 @@ if (!$publisher->avatar_url) {
 
                                     <?= $form->field($publisher, 'avatar_url')->textInput()->hiddenInput()->label(false) ?>
 
+                                    <?= $form->field($publication, 'id')->textInput()->hiddenInput()->label(false) ?>
+
+
                                     <div class="form-group">
                                         <?= Html::submitButton('Follow', [
                                             'class' => 'btn btn-primary',
-                                            'name' => 'follow-button-modal',
+                                            'name' => 'follow-button-publication',
                                             'style' => 'padding: 6px 30px'
                                         ]) ?>
                                     </div>

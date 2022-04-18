@@ -141,7 +141,8 @@ class UserController extends Controller
         $model = new FollowForm();
         $formData = Yii::$app->request->post();
 
-        if (Yii::$app->request->isPost && (isset($formData['follow-button']) || isset($formData['follow-button-modal']))) {
+        if (Yii::$app->request->isPost && (isset($formData['follow-button']) || isset($formData['follow-button-modal'])
+                || isset($formData['follow-button-publication']))) {
             $model->followingDataArray = $formData['User'];
             $model->followingNickname = $formData['User']['nickname'];;
             $model->followingId = $formData['User']['id'];;
@@ -166,6 +167,11 @@ class UserController extends Controller
         if (isset($formData['follow-button-modal'])) {
             return $this->refresh();
         }
+
+        if (isset($formData['follow-button-publication'])) {
+            return $this->redirect("/publication/{$formData['Publication']['id']}");
+        }
+
         return $this->redirect("/user/{$formData['User']['nickname']}");
     }
 
@@ -176,7 +182,8 @@ class UserController extends Controller
         $model = new UnfollowForm();
         $formData = Yii::$app->request->post();
 
-        if (Yii::$app->request->isPost && (isset($formData['unfollow-button']) || isset($formData['unfollow-button-modal']))) {
+        if (Yii::$app->request->isPost && (isset($formData['unfollow-button']) || isset($formData['unfollow-button-modal'])
+                || isset($formData['unfollow-button-publication']))) {
             $model->unfollowingNickname = $formData['User']['nickname'];
             $model->unfollowingId = $formData['User']['id'];
             $model->userId = $user->id;
@@ -199,6 +206,10 @@ class UserController extends Controller
 
         if (isset($formData['unfollow-button-modal'])) {
             return $this->refresh();
+        }
+
+        if (isset($formData['unfollow-button-publication'])) {
+            return $this->redirect("/publication/{$formData['Publication']['id']}");
         }
 
         return $this->redirect("/user/{$formData['User']['nickname']}");
