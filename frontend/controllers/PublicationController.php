@@ -67,4 +67,20 @@ class PublicationController extends Controller
             'isMyProfile' => User::isMyProfile($publisher->nickname),
         ]);
     }
+
+    public function actionDelete($id)
+    {
+        $publication = Publication::findOne($id);
+        $authUserNickname = Yii::$app->user->identity->nickname;
+
+        $formData = Yii::$app->request->post();
+
+        if (Yii::$app->request->isPost && isset($formData['delete-publication-button'])) {
+            if ($publication->delete()) {
+                Yii::$app->session->setFlash('success', 'You have been successfully deleted publication');
+            }
+        }
+
+        return $this->redirect("/user/$authUserNickname");
+    }
 }

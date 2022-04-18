@@ -51,7 +51,8 @@ return [
                     '/user/<nickname>' => '/user/view',
 
                     '/publication/create' => '/publication/create',
-                    '/publication/<id>' => '/publication/view'
+                    '/publication/<id>' => '/publication/view',
+                    '/publication/<id>/delete' => '/publication/delete'
                 ],
         ],
     ],

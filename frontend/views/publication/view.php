@@ -124,6 +124,12 @@ if (!$publisher->avatar_url) {
 
                                 </div>
                             <?php endif; ?>
+
+                        <?php else: ?>
+                        <div class="col-6" style="text-align: right; margin-top: 17px">
+                            <button type="button" class="btn btn-outline-secondary" data-toggle="modal"
+                                    data-target="#optionsModal">Options</button>
+                        </div>
                         <?php endif; ?>
                     </div>
                     <hr>
@@ -138,6 +144,39 @@ if (!$publisher->avatar_url) {
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="optionsModal" tabindex="-1" role="dialog" aria-labelledby="optionsModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="optionsModal">Publication options</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <?php $form = ActiveForm::begin([
+                        'id' => 'Options-form',
+                        'action' => "/publication/$publication->id/delete"
+                ]);?>
+
+                <div class="form-group" style="text-align: center">
+                    <?= Html::submitButton('Delete', [
+                        'class' => 'btn btn-danger',
+                        'name' => 'delete-publication-button',
+                        'style' => 'padding: 6px 30px'
+                    ]) ?>
+                </div>
+
+                <?php ActiveForm::end(); ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
