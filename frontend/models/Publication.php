@@ -60,6 +60,11 @@ class Publication extends ActiveRecord
             $firstImageUrls[$publication['id']] = unserialize($publication['images_urls'])[0];
         }
 
-        return$firstImageUrls;
+        return $firstImageUrls;
+    }
+
+    public function getComments()
+    {
+        return $this->hasMany(Comment::class, ['publication_id' => 'id'])->all();
     }
 }
