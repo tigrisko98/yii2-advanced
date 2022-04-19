@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use common\models\User;
+use frontend\models\Comment;
 use frontend\models\CreateCommentForm;
 use frontend\models\Publication;
 use frontend\models\PublicationUpdateForm;
@@ -58,6 +59,9 @@ class PublicationController extends Controller
         $publisher = User::findIdentity($publication->user_id);
         $images = unserialize($publication->images_urls);
 
+        $comments = $publication->getComments();
+        $commentsWithAnswersSubArray = Comment::createAnswersSubArray($comments);
+
         $authUser = Yii::$app->user->identity;
 
         return $this->render('view', [
@@ -67,7 +71,8 @@ class PublicationController extends Controller
             'modelUpload' => new UploadAvatarForm(),
             'isFollowing' => User::isFollowing($authUser, $publisher->id),
             'isMyProfile' => User::isMyProfile($publisher->nickname),
-            'authUser' => $authUser
+            'authUser' => $authUser,
+            'commentsWithAnswersSubArray' => $commentsWithAnswersSubArray
         ]);
     }
 

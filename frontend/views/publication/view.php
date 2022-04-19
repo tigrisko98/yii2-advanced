@@ -7,7 +7,9 @@
 /** @var array $images */
 /** @var boolean $isMyProfile */
 /** @var boolean $isFollowing */
-/** @var \yii\web\User $authUser */
+/** @var \common\models\User $authUser */
+
+/** @var array $commentsWithAnswersSubArray */
 
 use yii\bootstrap4\Html;
 use yii\bootstrap4\ActiveForm;
@@ -108,6 +110,16 @@ if (!$publisher->avatar_url) {
                         <?= $publication->caption; ?>
                     </div>
                 </div>
+                <div class="row" style="margin-top: 15px">
+                    <div class="col-md-12">
+<!--                        --><?php //foreach ($commentsWithAnswersSubArray as $comment): ?>
+<!--                            <div class="col-md-2">-->
+<!--                                <img src="--><?//= $comment['avatar_url']; ?><!--" alt="user-avatar"-->
+<!--                                     style="width: 50px; height: 50px; border-radius: 50%;">-->
+<!--                            </div>-->
+<!--                        --><?php //endforeach; ?>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -125,6 +137,10 @@ if (!$publisher->avatar_url) {
            value="1">
     <input type="hidden" class="form-group" name="CreateCommentForm[is_answer]"
            value="0">
+    <input type="hidden" class="form-group" name="CreateCommentForm[user_nickname]"
+           value="<?= $authUser->nickname; ?>">
+    <input type="hidden" class="form-group" name="CreateCommentForm[user_avatar_url]"
+           value="<?= $authUser->avatar_url; ?>">
     <div class="form-group">
         <button type="submit" class="btn btn-primary"
                 name="create-comment-button">

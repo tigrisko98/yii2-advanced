@@ -65,6 +65,6 @@ class Publication extends ActiveRecord
 
     public function getComments()
     {
-        return $this->hasMany(Comment::class, ['publication_id' => 'id'])->all();
+        return $this->hasMany(Comment::class, ['publication_id' => 'id'])->asArray()->all();
     }
 }

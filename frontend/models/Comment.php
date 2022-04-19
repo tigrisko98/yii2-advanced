@@ -18,6 +18,8 @@ use yii\db\ActiveRecord;
  * @property integer $main_comment_id
  * @property integer $created_at
  * @property integer $updated_at
+ * @property string $user_nickname
+ * @property string $user_avatar_url
  */
 class Comment extends ActiveRecord
 {
@@ -49,5 +51,25 @@ class Comment extends ActiveRecord
             ['user_id', 'in', 'range' => User::find()->select('id')->asArray()->column()],
             ['main_comment_id', 'in', 'range' => static::find()->select('id')->where(['is_main' => 1])->asArray()->column()]
         ];
+    }
+
+    public static function getAnswers(int $mainCommentId): array
+    {
+        return static::find()->where(['main_comment_id' => $mainCommentId])->asArray()->all();
+    }
+
+    public static function createAnswersSubArray(array &$comments): array
+    {
+        foreach ($comments as $key => $comment) {
+            if ($comment['is_main'] == 1) {
+                $comments[$key]['answers'] = static::getAnswers($comment['id']);
+            }
+
+            if ($comment['is_answer'] == 1) {
+                unset($comments[$key]);
+            }
+        }
+
+        return $comments;
     }
 }

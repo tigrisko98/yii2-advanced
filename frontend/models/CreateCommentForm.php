@@ -12,6 +12,8 @@ class CreateCommentForm extends Model
     public $is_main;
     public $is_answer;
     public $main_comment_id = null;
+    public $user_nickname;
+    public $user_avatar_url;
 
     public function rules()
     {
