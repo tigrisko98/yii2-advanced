@@ -6,8 +6,8 @@
 /** @var \frontend\models\UploadAvatarForm $modelUpload */
 /** @var array $images */
 /** @var boolean $isMyProfile */
-
 /** @var boolean $isFollowing */
+/** @var \yii\web\User $authUser */
 
 use yii\bootstrap4\Html;
 use yii\bootstrap4\ActiveForm;
@@ -112,6 +112,26 @@ if (!$publisher->avatar_url) {
         </div>
     </div>
 </div>
+
+<form id="Create-comment-form" action="/publication/<?= $publication->id; ?>/comment" method="post">
+    <input type="hidden" name="_csrf-frontend"
+           value="<?= Yii::$app->request->csrfParam ?>">
+    <input type="hidden" class="form-group" name="CreateCommentForm[publication_id]"
+           value="<?= $publication->id ?>">
+    <input type="hidden" class="form-group" name="CreateCommentForm[user_id]"
+           value="<?= $authUser->id ?>">
+    <input type="text" class="form-group text-comment" name="CreateCommentForm[text]" placeholder="Leave a comment">
+    <input type="hidden" class="form-group" name="CreateCommentForm[is_main]"
+           value="1">
+    <input type="hidden" class="form-group" name="CreateCommentForm[is_answer]"
+           value="0">
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary"
+                name="create-comment-button">
+            Comment
+        </button>
+    </div>
+</form>
 
 <div class="modal fade" id="optionsModal" tabindex="-1" role="dialog" aria-labelledby="optionsModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
