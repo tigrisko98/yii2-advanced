@@ -21,13 +21,19 @@ if (!$publisher->avatar_url) {
 
 ?>
 
+<script>
+    function Openform(formId) {
+        document.getElementById(formId).style.display = '';
+    }
+</script>
+
 <div class="publication-view">
     <div class="container">
         <div class="row">
-            <div class="col-md-7" style="background-color: black">
+            <div class="col-md-7">
                 <?= PublicationImagesCarousel::renderCarousel($images); ?>
             </div>
-            <div class="col-md-5 border">
+            <div class="container col-md-5 border">
                 <div class="row">
                     <div class="col-md-2">
                         <img src="<?= $publisher->avatar_url ?>" alt="user-avatar"
@@ -103,51 +109,111 @@ if (!$publisher->avatar_url) {
                 <div class="row">
                     <div class="col-md-2">
                         <img src="<?= $publisher->avatar_url ?>" alt="user-avatar"
-                             style="width: 50px; height: 50px; border-radius: 50%;">
+                             style="width: 50px; height: 50px; border-radius: 50%; margin-top: -15px">
                     </div>
-                    <div class="col-md-10" style="margin-top: 13px; margin-left: -10px">
+                    <div class="col-md-10" style="margin-top: 3px; margin-left: -10px">
                         <strong><?= $publisher->nickname; ?></strong>
                         <?= $publication->caption; ?>
                     </div>
                 </div>
-                <div class="row" style="margin-top: 15px">
-                    <div class="col-md-12">
-<!--                        --><?php //foreach ($commentsWithAnswersSubArray as $comment): ?>
-<!--                            <div class="col-md-2">-->
-<!--                                <img src="--><?//= $comment['avatar_url']; ?><!--" alt="user-avatar"-->
-<!--                                     style="width: 50px; height: 50px; border-radius: 50%;">-->
-<!--                            </div>-->
-<!--                        --><?php //endforeach; ?>
-                    </div>
+                <div class="container pre-scrollable" style="max-height: 435px">
+                    <?php foreach ($commentsWithAnswersSubArray as $comment): ?>
+                        <div class="row" style="margin-top: 15px">
+                            <div class="col-md-2">
+                                <img src="<?= $comment['user_avatar_url']; ?>" alt="user-avatar"
+                                     style="width: 50px; height: 50px; border-radius: 50%;">
+                            </div>
+                            <div class="col-md-10" style="margin-top: 13px; margin-left: -10px">
+                                <strong><?= $comment['user_nickname']; ?></strong>
+                                <?= $comment['text']; ?>
+                                <button class="badge badge-secondary" onclick="Openform('Create-answer-form');">
+                                    Answer
+                                </button>
+                            </div>
+                        </div>
+                        <?php foreach ($comment['answers'] as $answer): ?>
+                            <div class="row" style="margin-left: 15px">
+                                <div class="col-md-2">
+                                    <img src="<?= $comment['user_avatar_url']; ?>" alt="user-avatar"
+                                         style="width: 50px; height: 50px; border-radius: 50%;">
+                                </div>
+                                <div class="col-md-10" style="margin-top: 13px; margin-left: -10px">
+                                    <strong><?= $answer['user_nickname']; ?></strong>
+                                    <?= $answer['text']; ?>
+                                    <button class="badge badge-secondary" onclick="Openform('Create-answer-form');">
+                                        Answer
+                                    </button>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                        <div class="fixed-bottom" style="padding-bottom: 168px; padding-left: 928px">
+                            <form id="Create-answer-form" action="/publication/<?= $publication->id; ?>/comment"
+                                  method="post" style="display: none">
+                                <input type="hidden" name="_csrf-frontend"
+                                       value="<?= Yii::$app->request->csrfParam ?>">
+                                <input type="hidden" class="form-group" name="CreateCommentForm[publication_id]"
+                                       value="<?= $publication->id ?>">
+                                <input type="hidden" class="form-group" name="CreateCommentForm[user_id]"
+                                       value="<?= $authUser->id ?>">
+                                <input type="hidden" class="form-group" name="CreateCommentForm[is_main]"
+                                       value="0">
+                                <input type="hidden" class="form-group" name="CreateCommentForm[is_answer]"
+                                       value="1">
+                                <input type="hidden" class="form-group" name="CreateCommentForm[main_comment_id]"
+                                       value="<?= $comment['id']; ?>">
+                                <input type="hidden" class="form-group" name="CreateCommentForm[user_nickname]"
+                                       value="<?= $authUser->nickname; ?>">
+                                <input type="hidden" class="form-group" name="CreateCommentForm[user_avatar_url]"
+                                       value="<?= $authUser->avatar_url; ?>">
+                                <div class="input-group" style="max-width: 462px">
+                                    <input type="text" class="form-control" name="CreateCommentForm[text]"
+                                           placeholder="@<?= $comment['user_nickname']; ?>"
+                                           aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-primary"
+                                                name="create-comment-button" style="padding: 0 20.5px;">
+                                            Answer
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <div class="row">
+                    <form id="Create-comment-form" action="/publication/<?= $publication->id; ?>/comment" method="post">
+                        <input type="hidden" name="_csrf-frontend"
+                               value="<?= Yii::$app->request->csrfParam ?>">
+                        <input type="hidden" class="form-group" name="CreateCommentForm[publication_id]"
+                               value="<?= $publication->id ?>">
+                        <input type="hidden" class="form-group" name="CreateCommentForm[user_id]"
+                               value="<?= $authUser->id ?>">
+                        <input type="hidden" class="form-group" name="CreateCommentForm[is_main]"
+                               value="1">
+                        <input type="hidden" class="form-group" name="CreateCommentForm[is_answer]"
+                               value="0">
+                        <input type="hidden" class="form-group" name="CreateCommentForm[user_nickname]"
+                               value="<?= $authUser->nickname; ?>">
+                        <input type="hidden" class="form-group" name="CreateCommentForm[user_avatar_url]"
+                               value="<?= $authUser->avatar_url; ?>">
+                        <div class="input-group" style="width: 141%">
+                            <input type="text" class="form-control" name="CreateCommentForm[text]"
+                                   placeholder="Leave a comment"
+                                   aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-primary"
+                                        name="create-comment-button">
+                                    Comment
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<form id="Create-comment-form" action="/publication/<?= $publication->id; ?>/comment" method="post">
-    <input type="hidden" name="_csrf-frontend"
-           value="<?= Yii::$app->request->csrfParam ?>">
-    <input type="hidden" class="form-group" name="CreateCommentForm[publication_id]"
-           value="<?= $publication->id ?>">
-    <input type="hidden" class="form-group" name="CreateCommentForm[user_id]"
-           value="<?= $authUser->id ?>">
-    <input type="text" class="form-group text-comment" name="CreateCommentForm[text]" placeholder="Leave a comment">
-    <input type="hidden" class="form-group" name="CreateCommentForm[is_main]"
-           value="1">
-    <input type="hidden" class="form-group" name="CreateCommentForm[is_answer]"
-           value="0">
-    <input type="hidden" class="form-group" name="CreateCommentForm[user_nickname]"
-           value="<?= $authUser->nickname; ?>">
-    <input type="hidden" class="form-group" name="CreateCommentForm[user_avatar_url]"
-           value="<?= $authUser->avatar_url; ?>">
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary"
-                name="create-comment-button">
-            Comment
-        </button>
-    </div>
-</form>
 
 <div class="modal fade" id="optionsModal" tabindex="-1" role="dialog" aria-labelledby="optionsModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
