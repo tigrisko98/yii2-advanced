@@ -27,6 +27,12 @@ if (!$publisher->avatar_url) {
     }
 </script>
 
+<script>
+    function Closeform(formId) {
+        document.getElementById(formId).style.display = 'none';
+    }
+</script>
+
 <div class="publication-view">
     <div class="container">
         <div class="row">
@@ -126,11 +132,48 @@ if (!$publisher->avatar_url) {
                             <div class="col-md-10" style="margin-top: 13px; margin-left: -10px">
                                 <strong><?= $comment['user_nickname']; ?></strong>
                                 <?= $comment['text']; ?>
-                                <button class="badge badge-secondary" onclick="Openform('Create-answer-form');">
+                                <button class="badge badge-secondary"
+                                        onclick="Openform('Create-answer-form-<?= $comment['id']; ?>');">
                                     Answer
                                 </button>
                             </div>
                         </div>
+                        <form id="Create-answer-form-<?= $comment['id']; ?>"
+                              action="/publication/<?= $publication->id; ?>/comment"
+                              method="post" style="display: none">
+                            <input type="hidden" name="_csrf-frontend"
+                                   value="<?= Yii::$app->request->csrfParam ?>">
+                            <input type="hidden" class="form-group" name="CreateCommentForm[publication_id]"
+                                   value="<?= $publication->id ?>">
+                            <input type="hidden" class="form-group" name="CreateCommentForm[user_id]"
+                                   value="<?= $authUser->id ?>">
+                            <input type="hidden" class="form-group" name="CreateCommentForm[is_main]"
+                                   value="0">
+                            <input type="hidden" class="form-group" name="CreateCommentForm[is_answer]"
+                                   value="1">
+                            <input type="hidden" class="form-group" name="CreateCommentForm[main_comment_id]"
+                                   value="<?= $comment['id']; ?>">
+                            <input type="hidden" class="form-group" name="CreateCommentForm[user_nickname]"
+                                   value="<?= $authUser->nickname; ?>">
+                            <input type="hidden" class="form-group" name="CreateCommentForm[user_avatar_url]"
+                                   value="<?= $authUser->avatar_url; ?>">
+                            <div class="input-group" style="max-width: 462px">
+                                <input type="text" class="form-control" name="CreateCommentForm[text]"
+                                       placeholder="@<?= $comment['user_nickname']; ?>"
+                                       aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary"
+                                            name="create-comment-button" style="padding: 0 20.5px;">
+                                        Answer
+                                    </button>
+                                </div>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                        onclick="Closeform('Create-answer-form-<?= $comment['id']; ?>')">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                        </form>
                         <?php foreach ($comment['answers'] as $answer): ?>
                             <div class="row" style="margin-left: 15px">
                                 <div class="col-md-2">
@@ -140,14 +183,14 @@ if (!$publisher->avatar_url) {
                                 <div class="col-md-10" style="margin-top: 13px; margin-left: -10px">
                                     <strong><?= $answer['user_nickname']; ?></strong>
                                     <?= $answer['text']; ?>
-                                    <button class="badge badge-secondary" onclick="Openform('Create-answer-form');">
+                                    <button class="badge badge-secondary"
+                                            onclick="Openform('Create-answer-form-<?= $answer['id']; ?>');">
                                         Answer
                                     </button>
                                 </div>
                             </div>
-                        <?php endforeach; ?>
-                        <div class="fixed-bottom" style="padding-bottom: 168px; padding-left: 928px">
-                            <form id="Create-answer-form" action="/publication/<?= $publication->id; ?>/comment"
+                            <form id="Create-answer-form-<?= $answer['id']; ?>"
+                                  action="/publication/<?= $publication->id; ?>/comment"
                                   method="post" style="display: none">
                                 <input type="hidden" name="_csrf-frontend"
                                        value="<?= Yii::$app->request->csrfParam ?>">
@@ -160,12 +203,12 @@ if (!$publisher->avatar_url) {
                                 <input type="hidden" class="form-group" name="CreateCommentForm[is_answer]"
                                        value="1">
                                 <input type="hidden" class="form-group" name="CreateCommentForm[main_comment_id]"
-                                       value="<?= $comment['id']; ?>">
+                                       value="<?= $answer['main_comment_id']; ?>">
                                 <input type="hidden" class="form-group" name="CreateCommentForm[user_nickname]"
                                        value="<?= $authUser->nickname; ?>">
                                 <input type="hidden" class="form-group" name="CreateCommentForm[user_avatar_url]"
                                        value="<?= $authUser->avatar_url; ?>">
-                                <div class="input-group" style="max-width: 462px">
+                                <div class="input-group" style="max-width: 450px">
                                     <input type="text" class="form-control" name="CreateCommentForm[text]"
                                            placeholder="@<?= $comment['user_nickname']; ?>"
                                            aria-describedby="basic-addon2">
@@ -175,9 +218,13 @@ if (!$publisher->avatar_url) {
                                             Answer
                                         </button>
                                     </div>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                            onclick="Closeform('Create-answer-form-<?= $answer['id']; ?>')">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
                             </form>
-                        </div>
+                        <?php endforeach; ?>
                     <?php endforeach; ?>
                 </div>
                 <div class="row">
@@ -208,7 +255,6 @@ if (!$publisher->avatar_url) {
                             </div>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>
