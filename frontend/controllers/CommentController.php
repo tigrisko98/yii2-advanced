@@ -64,4 +64,19 @@ class CommentController extends Controller
         return $this->redirect("/publication/$comment->publication_id");
     }
 
+    public function actionDelete($id)
+    {
+        $comment = Comment::findOne($id);
+        $publicationId = $comment->publication_id;
+        $formData = Yii::$app->request->post();
+
+        if (Yii::$app->request->isPost && isset($formData['delete-comment-button'])) {
+            if ($comment->delete()) {
+                return $this->redirect("/publication/$publicationId");
+            }
+        }
+
+        return $this->redirect("/publication/$publicationId");
+    }
+
 }

@@ -142,6 +142,16 @@ if (!$publisher->avatar_url) {
                                             onclick="Openform('Update-comment-form-<?= $comment['id']; ?>');">
                                         Edit
                                     </button>
+
+                                <form id="Delete-comment-form-<?= $comment['id']; ?>" method="post"
+                                      action="/comment/<?= $comment['id']; ?>/delete">
+                                    <input type="hidden" name="_csrf-frontend"
+                                           value="<?= Yii::$app->request->csrfParam ?>">
+                                    <button type="submit" class="badge badge-danger"
+                                            name="delete-comment-button">
+                                        Delete
+                                    </button>
+                                </form>
                                 <?php endif; ?>
 
                             </div>
@@ -217,6 +227,16 @@ if (!$publisher->avatar_url) {
                                                 onclick="Openform('Update-comment-form-<?= $answer['id']; ?>');">
                                             Edit
                                         </button>
+
+                                        <form id="Delete-comment-form-<?= $answer['id']; ?>" method="post"
+                                              action="/comment/<?= $answer['id']; ?>/delete">
+                                            <input type="hidden" name="_csrf-frontend"
+                                                   value="<?= Yii::$app->request->csrfParam ?>">
+                                            <button type="submit" class="badge badge-danger"
+                                                    name="delete-comment-button">
+                                                Delete
+                                            </button>
+                                        </form>
                                     <?php endif; ?>
 
                                 </div>

@@ -57,6 +57,7 @@ return [
                     '/publication/<id>/comment' => '/comment/create',
 
                     '/comment/<id>/edit' => '/comment/edit',
+                    '/comment/<id>/delete' => '/comment/delete'
                 ],
         ],
     ],

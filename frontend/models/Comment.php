@@ -54,6 +54,13 @@ class Comment extends ActiveRecord
         ];
     }
 
+    public function delete()
+    {
+        static::deleteAll(['main_comment_id' => $this->id]);
+
+        return parent::delete();
+    }
+
     public static function getAnswers(int $mainCommentId): array
     {
         return static::find()->where(['main_comment_id' => $mainCommentId])->asArray()->all();
