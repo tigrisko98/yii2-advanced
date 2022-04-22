@@ -67,4 +67,9 @@ class Publication extends ActiveRecord
     {
         return $this->hasMany(Comment::class, ['publication_id' => 'id'])->asArray()->all();
     }
+
+    public function deleteComments()
+    {
+        return Comment::deleteAll(['publication_id' => $this->id]);
+    }
 }

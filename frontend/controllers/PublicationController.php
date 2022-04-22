@@ -85,7 +85,7 @@ class PublicationController extends Controller
         $formData = Yii::$app->request->post();
 
         if (Yii::$app->request->isPost && isset($formData['delete-publication-button'])) {
-            if ($publication->delete()) {
+            if ($publication->deleteComments() && $publication->delete()) {
                 Yii::$app->session->setFlash('success', 'You have been successfully deleted publication');
             }
         }
