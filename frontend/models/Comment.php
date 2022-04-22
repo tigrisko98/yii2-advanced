@@ -5,6 +5,7 @@ namespace frontend\models;
 use common\models\User;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use Yii;
 
 /**
  * Publication model

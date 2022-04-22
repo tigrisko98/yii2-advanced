@@ -72,7 +72,8 @@ class PublicationController extends Controller
             'isFollowing' => User::isFollowing($authUser, $publisher->id),
             'isMyProfile' => User::isMyProfile($publisher->nickname),
             'authUser' => $authUser,
-            'commentsWithAnswersSubArray' => $commentsWithAnswersSubArray
+            'commentsWithAnswersSubArray' => $commentsWithAnswersSubArray,
+            'isM'
         ]);
     }
 

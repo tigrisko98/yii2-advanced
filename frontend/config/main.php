@@ -55,6 +55,8 @@ return [
                     '/publication/<id>/delete' => '/publication/delete',
                     '/publication/<id>/edit' => '/publication/edit',
                     '/publication/<id>/comment' => '/comment/create',
+
+                    '/comment/<id>/edit' => '/comment/edit',
                 ],
         ],
     ],

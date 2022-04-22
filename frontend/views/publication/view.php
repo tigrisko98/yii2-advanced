@@ -136,6 +136,14 @@ if (!$publisher->avatar_url) {
                                         onclick="Openform('Create-answer-form-<?= $comment['id']; ?>');">
                                     Answer
                                 </button>
+
+                                <?php if ($comment['user_id'] == $authUser['id']): ?>
+                                    <button class="badge badge-secondary"
+                                            onclick="Openform('Update-comment-form-<?= $comment['id']; ?>');">
+                                        Edit
+                                    </button>
+                                <?php endif; ?>
+
                             </div>
                         </div>
                         <form id="Create-answer-form-<?= $comment['id']; ?>"
@@ -172,8 +180,24 @@ if (!$publisher->avatar_url) {
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-
                         </form>
+
+                        <form id="Update-comment-form-<?= $comment['id']; ?>" method="post"
+                              action="/comment/<?= $comment['id']; ?>/edit" style="display: none">
+                            <input type="hidden" name="_csrf-frontend"
+                                   value="<?= Yii::$app->request->csrfParam ?>">
+                            <div class="input-group" style="max-width: 462px">
+                                <input type="text" class="form-control" name="UpdateCommentForm[text]"
+                                       value="<?= $comment['text']; ?>" aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary"
+                                            name="update-comment-button" style="padding: 0 20.5px;">
+                                        Edit
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
                         <?php foreach ($comment['answers'] as $answer): ?>
                             <div class="row" style="margin-left: 15px">
                                 <div class="col-md-2">
@@ -187,6 +211,14 @@ if (!$publisher->avatar_url) {
                                             onclick="Openform('Create-answer-form-<?= $answer['id']; ?>');">
                                         Answer
                                     </button>
+
+                                    <?php if ($answer['user_id'] == $authUser['id']): ?>
+                                        <button class="badge badge-secondary"
+                                                onclick="Openform('Update-comment-form-<?= $answer['id']; ?>');">
+                                            Edit
+                                        </button>
+                                    <?php endif; ?>
+
                                 </div>
                             </div>
                             <form id="Create-answer-form-<?= $answer['id']; ?>"
@@ -222,6 +254,22 @@ if (!$publisher->avatar_url) {
                                             onclick="Closeform('Create-answer-form-<?= $answer['id']; ?>')">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
+                                </div>
+                            </form>
+
+                            <form id="Update-comment-form-<?= $answer['id']; ?>" method="post"
+                                  action="/comment/<?= $answer['id']; ?>/edit" style="display: none">
+                                <input type="hidden" name="_csrf-frontend"
+                                       value="<?= Yii::$app->request->csrfParam ?>">
+                                <div class="input-group" style="max-width: 462px">
+                                    <input type="text" class="form-control" name="UpdateCommentForm[text]"
+                                           value="<?= $answer['text']; ?>" aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-primary"
+                                                name="update-comment-button" style="padding: 0 20.5px;">
+                                            Edit
+                                        </button>
+                                    </div>
                                 </div>
                             </form>
                         <?php endforeach; ?>
