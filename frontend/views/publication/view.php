@@ -143,15 +143,15 @@ if (!$publisher->avatar_url) {
                                         Edit
                                     </button>
 
-                                <form id="Delete-comment-form-<?= $comment['id']; ?>" method="post"
-                                      action="/comment/<?= $comment['id']; ?>/delete">
-                                    <input type="hidden" name="_csrf-frontend"
-                                           value="<?= Yii::$app->request->csrfParam ?>">
-                                    <button type="submit" class="badge badge-danger"
-                                            name="delete-comment-button">
-                                        Delete
-                                    </button>
-                                </form>
+                                    <form id="Delete-comment-form-<?= $comment['id']; ?>" method="post"
+                                          action="/comment/<?= $comment['id']; ?>/delete">
+                                        <input type="hidden" name="_csrf-frontend"
+                                               value="<?= Yii::$app->request->csrfParam ?>">
+                                        <button type="submit" class="badge badge-danger"
+                                                name="delete-comment-button">
+                                            Delete
+                                        </button>
+                                    </form>
                                 <?php endif; ?>
 
                             </div>
@@ -211,7 +211,7 @@ if (!$publisher->avatar_url) {
                         <?php foreach ($comment['answers'] as $answer): ?>
                             <div class="row" style="margin-left: 15px">
                                 <div class="col-md-2">
-                                    <img src="<?= $comment['user_avatar_url']; ?>" alt="user-avatar"
+                                    <img src="<?= $answer['user_avatar_url']; ?>" alt="user-avatar"
                                          style="width: 50px; height: 50px; border-radius: 50%;">
                                 </div>
                                 <div class="col-md-10" style="margin-top: 13px; margin-left: -10px">
@@ -295,35 +295,35 @@ if (!$publisher->avatar_url) {
                         <?php endforeach; ?>
                     <?php endforeach; ?>
                 </div>
-                <div class="row">
-                    <form id="Create-comment-form" action="/publication/<?= $publication->id; ?>/comment" method="post">
-                        <input type="hidden" name="_csrf-frontend"
-                               value="<?= Yii::$app->request->csrfParam ?>">
-                        <input type="hidden" class="form-group" name="CreateCommentForm[publication_id]"
-                               value="<?= $publication->id ?>">
-                        <input type="hidden" class="form-group" name="CreateCommentForm[user_id]"
-                               value="<?= $authUser->id ?>">
-                        <input type="hidden" class="form-group" name="CreateCommentForm[is_main]"
-                               value="1">
-                        <input type="hidden" class="form-group" name="CreateCommentForm[is_answer]"
-                               value="0">
-                        <input type="hidden" class="form-group" name="CreateCommentForm[user_nickname]"
-                               value="<?= $authUser->nickname; ?>">
-                        <input type="hidden" class="form-group" name="CreateCommentForm[user_avatar_url]"
-                               value="<?= $authUser->avatar_url; ?>">
-                        <div class="input-group" style="width: 141%">
-                            <input type="text" class="form-control" name="CreateCommentForm[text]"
-                                   placeholder="Leave a comment"
-                                   aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-primary"
-                                        name="create-comment-button">
-                                    Comment
-                                </button>
-                            </div>
+            </div>
+            <div class="row" style="padding-left: 663px">
+                <form id="Create-comment-form" action="/publication/<?= $publication->id; ?>/comment" method="post">
+                    <input type="hidden" name="_csrf-frontend"
+                           value="<?= Yii::$app->request->csrfParam ?>">
+                    <input type="hidden" class="form-group" name="CreateCommentForm[publication_id]"
+                           value="<?= $publication->id ?>">
+                    <input type="hidden" class="form-group" name="CreateCommentForm[user_id]"
+                           value="<?= $authUser->id ?>">
+                    <input type="hidden" class="form-group" name="CreateCommentForm[is_main]"
+                           value="1">
+                    <input type="hidden" class="form-group" name="CreateCommentForm[is_answer]"
+                           value="0">
+                    <input type="hidden" class="form-group" name="CreateCommentForm[user_nickname]"
+                           value="<?= $authUser->nickname; ?>">
+                    <input type="hidden" class="form-group" name="CreateCommentForm[user_avatar_url]"
+                           value="<?= $authUser->avatar_url; ?>">
+                    <div class="input-group" style="width: 141%">
+                        <input type="text" class="form-control" name="CreateCommentForm[text]"
+                               placeholder="Leave a comment"
+                               aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary"
+                                    name="create-comment-button">
+                                Comment
+                            </button>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
